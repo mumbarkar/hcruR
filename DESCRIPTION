@@ -1,11 +1,25 @@
 Package: hcruR
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Title: Estimate and Compare Healthcare Resource Utilization (HCRU) for RWE
+Version: 0.1.0
+Authors@R: person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre"))
+Description: Tools to estimate and compare healthcare resource utilization (HCRU) by domain and cohort. Supports cohort-based event counting, cost summarization, time window analysis, and plotting for RWE studies.
+Depends: R (>= 4.1.0)
+Imports:
+    dplyr,
+    ggplot2,
+    tibble,
+    tidyr,
+    stats,
+    lubridate,
+    purrr,
+    stringr
+License: MIT
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+LazyData: true
+RoxygenNote: 7.0.0
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr

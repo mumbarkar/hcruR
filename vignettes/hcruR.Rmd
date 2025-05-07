@@ -1,0 +1,23 @@
+---
+title: "hcruR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{hcruR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(hcruR)
+
+summary <- estimate_hcru(cohort_sample, raw_hcru)
+group_summary <- compare_hcru_cohorts(summary, cohort_sample)
+plot_hcru(group_summary, metric = "mean_count")
+```
