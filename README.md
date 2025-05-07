@@ -1,4 +1,4 @@
-# hcruR <img src="man/figures/hcruR-hex.png" align="right" height="160"/>
+# hcruR <img src="man/figures/hcruR.png" align="right" height="130"/>
 
 **hcruR** is an R package to help health economists and RWE analysts estimate and compare healthcare resource utilization (HCRU) from observational healthcare data, such as claims or electronic health records.
 
