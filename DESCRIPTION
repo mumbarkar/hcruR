@@ -3,7 +3,7 @@ Title: Estimate and Compare Healthcare Resource Utilization (HCRU) for RWE
 Version: 0.1.0
 Authors@R: person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre"))
 Description: Tools to estimate and compare healthcare resource utilization (HCRU) by domain and cohort. Supports cohort-based event counting, cost summarization, time window analysis, and plotting for RWE studies.
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.5.0)
 Imports:
     dplyr,
     ggplot2,

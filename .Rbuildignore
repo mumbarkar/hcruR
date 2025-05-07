@@ -1,2 +1,4 @@
+^renv$
+^renv\.lock$
 ^hcruR\.Rproj$
 ^\.Rproj\.user$
