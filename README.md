@@ -1,6 +1,7 @@
 # hcruR <img src="man/figures/hcruR.png" align="right" height="130"/>
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/mumbarkar/hcruR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mumbarkar/hcruR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/mumbarkar/hcruR/graph/badge.svg)](https://app.codecov.io/gh/mumbarkar/hcruR)
 <!-- badges: end -->
   
 **hcruR** is an R package to help health economists and RWE analysts estimate and compare healthcare resource utilization (HCRU) from observational healthcare data, such as claims or electronic health records.
