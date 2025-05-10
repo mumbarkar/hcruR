@@ -4,11 +4,12 @@
 #' @param hcru Dataframe with person_id, event_date, domain, and cost
 #' @param pre_days Number of days before index (default 180)
 #' @param post_days Number of days after index (default 365)
-#'
-#' @import dplyr
-#' @importFrom dplyr lag
-#' @importFrom dplyr filter
-#' @import stats
+#' @importFrom dplyr left_join
+#' @importFrom dplyr group_by
+#' @importFrom dplyr summarise
+#' @importFrom dplyr mutate
+#' @importFrom dplyr case_when
+#' @importFrom dplyr n
 #'
 #' @return Dataframe with counts and costs per patient per domain and time window
 #' @export

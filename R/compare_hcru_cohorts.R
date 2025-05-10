@@ -2,8 +2,12 @@
 #'
 #' @param hcru_summary Output of estimate_hcru()
 #' @param cohort Metadata with person_id and cohort_id
-#' @import dplyr
+#'
+#' @importFrom dplyr left_join
+#' @importFrom dplyr group_by
+#' @importFrom dplyr summarise
 #' @importFrom stats median
+#'
 #' @return Group-level summary per domain and time window
 #' @export
 compare_hcru_cohorts <- function(hcru_summary, cohort) {
