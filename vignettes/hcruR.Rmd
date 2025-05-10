@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(hcruR)
 
+# Load sample data
+data(cohort_sample)
+data(raw_hcru)
+
 summary <- estimate_hcru(cohort_sample, raw_hcru)
 group_summary <- compare_hcru_cohorts(summary, cohort_sample)
 plot_hcru(group_summary, metric = "mean_count")

@@ -53,7 +53,7 @@ patient_summary <- estimate_hcru(
 )
 
 # Step 2: Compare cohorts (if cohort_id is present)
-group_summary <- compare_hcru_cohorts(
+group_summary <- compare_hcru_cohorts(http://127.0.0.1:9631/graphics/plot_zoom_png?width=1188&height=596
   hcru_summary = patient_summary,
   cohort = cohort_sample
 )

@@ -10,12 +10,13 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
 #' @importFrom dplyr n
+#' @importFrom dplyr filter
 #'
 #' @return Dataframe with counts and costs per patient per domain and time window
 #' @export
 estimate_hcru <- function(cohort, hcru, pre_days = 180, post_days = 365) {
-  hcru <- left_join(hcru, cohort, by = "person_id") |>
-    mutate(
+  hcru <- dplyr::left_join(hcru, cohort, by = "person_id") |>
+    dplyr::mutate(
       relative_day = as.integer(.data[["event_date"]] - .data[["index_date"]]),
       time_window = case_when(
         .data[["relative_day"]] < 0 & .data[["relative_day"]] >= pre_days ~ "pre",
@@ -23,12 +24,12 @@ estimate_hcru <- function(cohort, hcru, pre_days = 180, post_days = 365) {
         TRUE ~ NA_character_
       )
     ) |>
-    filter(!is.na(.data[["time_window"]]))
+    dplyr::filter(!is.na(.data[["time_window"]]))
 
   summary <- hcru |>
-    group_by(.data[["person_id"]], .data[["domain"]], .data[["time_window"]]) |>
-    summarise(
-      event_count = n(),
+    dplyr::group_by(.data[["person_id"]], .data[["domain"]], .data[["time_window"]]) |>
+    dplyr::summarise(
+      event_count = dplyr::n(),
       total_cost = sum(.data[["cost"]], na.rm = TRUE),
       .groups = "drop"
     )
