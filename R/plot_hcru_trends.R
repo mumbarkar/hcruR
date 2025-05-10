@@ -3,6 +3,8 @@
 #' @param hcru_group_summary Output from compare_hcru_cohorts()
 #' @param metric Either 'mean_count' or 'mean_cost'
 #'
+#' @import ggplot2
+#'
 #' @return ggplot object
 #' @export
 plot_hcru <- function(hcru_group_summary, metric = "mean_count") {
