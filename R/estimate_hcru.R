@@ -23,7 +23,7 @@ estimate_hcru <- function(cohort, hcru, pre_days = 180, post_days = 365) {
         TRUE ~ NA_character_
       )
     ) |>
-    dplyr::filter(!is.na(.data[["time_window"]]))
+    filter(!is.na(.data[["time_window"]]))
 
   summary <- hcru |>
     group_by(.data[["person_id"]], .data[["domain"]], .data[["time_window"]]) |>
