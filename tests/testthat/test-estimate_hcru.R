@@ -12,7 +12,9 @@ test_that("estimate_hcru works for typical inputs", {
 
   hcru <- tibble::tibble(
     person_id = c(1, 1, 2, 2),
-    event_date = as.Date(c("2019-08-01", "2020-02-01", "2020-05-15", "2020-08-01")),
+    event_date = as.Date(
+      c("2019-08-01", "2020-02-01", "2020-05-15", "2020-08-01")
+    ),
     domain = c("ip", "op", "ip", "ed"),
     cost = c(100, 200, 150, 250)
   )
@@ -20,7 +22,8 @@ test_that("estimate_hcru works for typical inputs", {
   result <- estimate_hcru(cohort, hcru)
 
   expect_s3_class(result, "data.frame")
-  expect_true(all(c("person_id", "domain", "time_window", "event_count", "total_cost") %in% names(result)))
+  expect_true(all(c("person_id", "domain", "time_window", "event_count",
+                    "total_cost") %in% names(result)))
   expect_equal(nrow(result), 2)  # One event is outside the pre/post window
 })
 

@@ -7,6 +7,7 @@
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
 #' @importFrom stats median
+#' @importFrom dplyr .data
 #'
 #' @return Group-level summary per domain and time window
 #' @export
@@ -14,7 +15,9 @@ compare_hcru_cohorts <- function(hcru_summary, cohort) {
   hcru_summary <- dplyr::left_join(hcru_summary, cohort, by = "person_id")
 
   hcru_summary |>
-    dplyr::group_by(.data[["cohort_id"]], .data[["domain"]], .data[["time_window"]]) |>
+    dplyr::group_by(
+      .data[["cohort_id"]], .data[["domain"]], .data[["time_window"]]
+    ) |>
     dplyr::summarise(
       mean_count = mean(.data[["event_count"]], na.rm = TRUE),
       median_count = stats::median(.data[["event_count"]], na.rm = TRUE),
