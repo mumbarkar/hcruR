@@ -27,6 +27,10 @@
 You can install the development version of hcruR from [GitHub](https://github.com/mumbarkar/hcruR) with:
 
 ``` r
+# Install from GitHub (after you upload the repo)
+# install.packages("devtools")
+devtools::install_github("mumbarkar/hcruR")
+
 # install.packages("pak")
 pak::pak("mumbarkar/hcruR")
 ```
@@ -41,25 +45,26 @@ This is a basic example which shows you how to solve a common problem:
 library(hcruR)
 
 # Load sample data
-data(cohort_sample)
-data(raw_hcru)
+data(hcru_sample_data)
 
 # Step 1: Estimate patient-level HCRU
-patient_summary <- estimate_hcru(
-  cohort = cohort_sample,
-  hcru = raw_hcru,
-  pre_days = 180,
-  post_days = 365
-)
-
-# Step 2: Compare cohorts (if cohort_id is present)
-group_summary <- compare_hcru_cohorts(http://127.0.0.1:9631/graphics/plot_zoom_png?width=1188&height=596
-  hcru_summary = patient_summary,
-  cohort = cohort_sample
-)
-
+estimate_hcru(data = hcru_sample_data,
+              cohort_col = "cohort",
+              patient_id_col = "patient_id",
+              admit_col = "admission_date",
+              discharge_col = "discharge_date",
+              index_col = "index_date",
+              visit_col = "visit_date",
+              encounter_id_col = "encounter_id",
+              setting_col = "care_setting",
+              pre_days = 180,
+              post_days = 365,
+              readmission_days_rule = 30,
+              var_list = c("care_setting", "length_of_stay", "readmission", "cost_usd"),
+              group_var = "cohort",
+              test = NULL)
 # Step 3: Plot results
-plot_hcru(group_summary, metric = "mean_cost")
+# plot_hcru(group_summary, metric = "mean_cost")
 ```
 
 ------------------------------------------------------------------------
@@ -97,15 +102,12 @@ Arguments:
 
 ## 📊 Sample Data
 
-This package includes two demo datasets for easy testing:
+This package includes a demo datasets for easy testing:
 
--   `cohort_sample`: 4 patients across 2 cohorts
-
--   `raw_hcru`: Example HCRU records across multiple domains
+-   `hcru_sample_data`: 200 patients across 2 cohorts
 
 ``` r
-head(cohort_sample)
-head(raw_hcru)
+head(hcru_sample_data)
 ```
 
 ------------------------------------------------------------------------

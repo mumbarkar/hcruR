@@ -18,10 +18,24 @@ knitr::opts_chunk$set(
 library(hcruR)
 
 # Load sample data
-data(cohort_sample)
-data(raw_hcru)
+data(hcru_sample_data)
 
-summary <- estimate_hcru(cohort_sample, raw_hcru)
-group_summary <- compare_hcru_cohorts(summary, cohort_sample)
-plot_hcru(group_summary, metric = "mean_count")
+# Step 1: Estimate patient-level HCRU
+estimate_hcru(data = hcru_sample_data,
+              cohort_col = "cohort",
+              patient_id_col = "patient_id",
+              admit_col = "admission_date",
+              discharge_col = "discharge_date",
+              index_col = "index_date",
+              visit_col = "visit_date",
+              encounter_id_col = "encounter_id",
+              setting_col = "care_setting",
+              pre_days = 180,
+              post_days = 365,
+              readmission_days_rule = 30,
+              var_list = c("care_setting", "length_of_stay", "readmission", "cost_usd"),
+              group_var = "cohort",
+              test = NULL)
+# Step 3: Plot results
+# plot_hcru(group_summary, metric = "mean_cost")
 ```
