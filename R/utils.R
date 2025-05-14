@@ -132,7 +132,7 @@ preproc_hcru_fun = function(data,
 #' @return A gtsummary table object
 #' @export
 #'
-summarize_descriptives <- function(data, var_list = NULL, group_var = NULL, test = NULL) {
+summarize_descriptives_gtsummary <- function(data, var_list = NULL, group_var = NULL, test = NULL) {
   if (!requireNamespace("gtsummary", quietly = TRUE)) {
     stop("Please install the 'gtsummary' package first.")
   }
@@ -198,4 +198,51 @@ summarize_descriptives <- function(data, var_list = NULL, group_var = NULL, test
   }
 
   return(tbl)
+}
+
+#' Generate Detailed Descriptive Statistics
+#'
+#' @param data A dataframe with variables to summarize.
+#' @param var_list Optional quoted variable list (e.g. care_setting).
+#' @param group_var Optional quoted grouping variable (e.g. cohort).
+#'
+#' @importFrom dplyr select left_join group_by summarise mutate case_when n
+#' filter ungroup
+#' @import checkmate
+#'
+#' @return A table object
+#' @export
+#'
+summarize_descriptives <- function(data,
+                                   patient_id_col = "patient_id",
+                                   setting_col = "care_setting",
+                                   cohort_col = "cohort",
+                                   encounter_id_col = "encounter_id",
+                                   cost_col = "cost_usd",
+                                   los_col = "length_of_stay",
+                                   readmission_col = "readmission",
+                                   time_window = "period") {
+
+  # Primary input checks
+  checkmate::assert_data_frame(data, min.rows = 1)
+  checkmate::assert_character(cohort_col, null.ok = TRUE)
+
+  summary_df <- data |>
+    dplyr::group_by(.data[[cohort_col]], .data[[setting_col]], .data[[time_window]]) |>
+    dplyr::summarise(
+      Patients = n_distinct(.data[[patient_id_col]]),
+      Visits = n_distinct(.data[[encounter_id_col]]),
+      Cost = sum(.data[[cost_col]], na.rm = TRUE),
+      Avg_visits_per_patient = round(Visits / Patients, 2),
+      Avg_cost_per_patient = round(Cost / Patients, 2),
+      Avg_LOS = ifelse(first(.data[[setting_col]]) == "IP",
+                       round(mean(.data[[los_col]], na.rm = TRUE), 2),
+                       NA_real_),
+      Readmit_30d_Rate = ifelse(first(.data[[setting_col]]) == "IP",
+                                round(mean(.data[[readmission_col]], na.rm = TRUE) * 100, 2),
+                                NA_real_)
+    ) |>
+    dplyr::ungroup()
+
+  return(summary_df)
 }

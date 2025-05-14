@@ -2,9 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{summarize_descriptives}
 \alias{summarize_descriptives}
-\title{Generate Detailed Descriptive Statistics with Custom P-Value Tests}
+\title{Generate Detailed Descriptive Statistics}
 \usage{
-summarize_descriptives(data, var_list = NULL, group_var = NULL, test = NULL)
+summarize_descriptives(
+  data,
+  patient_id_col = "patient_id",
+  setting_col = "care_setting",
+  cohort_col = "cohort",
+  encounter_id_col = "encounter_id",
+  cost_col = "cost_usd",
+  los_col = "length_of_stay",
+  readmission_col = "readmission",
+  time_window = "period"
+)
 }
 \arguments{
 \item{data}{A dataframe with variables to summarize.}
@@ -12,12 +22,10 @@ summarize_descriptives(data, var_list = NULL, group_var = NULL, test = NULL)
 \item{var_list}{Optional quoted variable list (e.g. care_setting).}
 
 \item{group_var}{Optional quoted grouping variable (e.g. cohort).}
-
-\item{test}{Optional named list of statistical tests (e.g. age ~ "wilcox.test").}
 }
 \value{
-A gtsummary table object
+A table object
 }
 \description{
-Generate Detailed Descriptive Statistics with Custom P-Value Tests
+Generate Detailed Descriptive Statistics
 }

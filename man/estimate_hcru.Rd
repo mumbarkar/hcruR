@@ -14,12 +14,16 @@ estimate_hcru(
   visit_col = "visit_date",
   encounter_id_col = "encounter_id",
   setting_col = "care_setting",
+  cost_col = "cost_usd",
+  readmission_col = "readmission",
+  los_col = "length_of_stay",
+  custom_var_list = NULL,
   pre_days = 180,
   post_days = 365,
   readmission_days_rule = 30,
-  var_list = c("care_setting", "length_of_stay", "readmission", "cost_usd"),
   group_var = "cohort",
-  test = NULL
+  test = NULL,
+  gt_output = FALSE
 )
 }
 \arguments{
@@ -54,6 +58,9 @@ setting column e.g. IP, ED, OP, etc.}
 
 \item{readmission_days_rule}{Rule for how many days can be permissible to
 define readmission criteria in AP setting (default 30 days)}
+
+\item{gt_output}{A logical values specifying that whether gtsummary output
+should be generated or not}
 }
 \value{
 dataframe with HCRU estimates.
