@@ -47,24 +47,41 @@ library(hcruR)
 # Load sample data
 data(hcru_sample_data)
 
-# Step 1: Estimate patient-level HCRU
-estimate_hcru(data = hcru_sample_data,
-              cohort_col = "cohort",
-              patient_id_col = "patient_id",
-              admit_col = "admission_date",
-              discharge_col = "discharge_date",
-              index_col = "index_date",
-              visit_col = "visit_date",
-              encounter_id_col = "encounter_id",
-              setting_col = "care_setting",
-              pre_days = 180,
-              post_days = 365,
-              readmission_days_rule = 30,
-              var_list = c("care_setting", "length_of_stay", "readmission", "cost_usd"),
-              group_var = "cohort",
-              test = NULL)
+# Step 1: Estimate HCRU
+hcru_summary = estimate_hcru(data = hcru_sample_data,
+                             cohort_col = "cohort",
+                             patient_id_col = "patient_id",
+                             admit_col = "admission_date",
+                             discharge_col = "discharge_date",
+                             index_col = "index_date",
+                             visit_col = "visit_date",
+                             encounter_id_col = "encounter_id",
+                             setting_col = "care_setting",
+                             cost_col = "cost_usd",
+                             readmission_col = "readmission",
+                             time_window_col = "period",
+                             los_col = "length_of_stay",
+                             custom_var_list = NULL,
+                             pre_days = 180,
+                             post_days = 365,
+                             readmission_days_rule = 30,
+                             group_var = "cohort",
+                             test = NULL,
+                             gt_output = FALSE)
 # Step 3: Plot results
-# plot_hcru(group_summary, metric = "mean_cost")
+p = plot_hcru(summary_df = hcru_summary$`Summary by settings using dplyr`,
+              x_var = "period",
+              y_var = "Cost",
+              cohort_col = "cohort",
+              facet_var = "care_setting",
+              facet_var_n = 3,
+              title = "Average total cost by domain and cohort",
+              x_lable = "Healthcare Setting (Domain)",
+              y_lable = "Average total cost",
+              fill_lable = "Cohort"
+)
+
+p
 ```
 
 ------------------------------------------------------------------------

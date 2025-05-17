@@ -16,6 +16,7 @@ estimate_hcru(
   setting_col = "care_setting",
   cost_col = "cost_usd",
   readmission_col = "readmission",
+  time_window_col = "period",
   los_col = "length_of_stay",
   custom_var_list = NULL,
   pre_days = 180,
@@ -52,12 +53,28 @@ encounter/claim column}
 \item{setting_col}{A character specifying the name of the HCRU
 setting column e.g. IP, ED, OP, etc.}
 
+\item{cost_col}{A character specifying the name of cost column}
+
+\item{readmission_col}{A character specifying the name of readmission column}
+
+\item{time_window_col}{A character specifying the name of time window column}
+
+\item{los_col}{A character specifying the name of length of stay column}
+
+\item{custom_var_list}{A character vector provides the list of additional
+columns}
+
 \item{pre_days}{Number of days before index (default 180 days)}
 
 \item{post_days}{Number of days after index (default 365 days)}
 
 \item{readmission_days_rule}{Rule for how many days can be permissible to
 define readmission criteria in AP setting (default 30 days)}
+
+\item{group_var}{A character specifying the name of grouping column}
+
+\item{test}{Optional named list of statistical tests
+(e.g. age ~ "wilcox.test").}
 
 \item{gt_output}{A logical values specifying that whether gtsummary output
 should be generated or not}

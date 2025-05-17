@@ -26,9 +26,17 @@
 #' define readmission criteria in AP setting (default 30 days)
 #' @param gt_output A logical values specifying that whether gtsummary output
 #' should be generated or not
+#' @param cost_col A character specifying the name of cost column
+#' @param los_col A character specifying the name of length of stay column
+#' @param readmission_col A character specifying the name of readmission column
+#' @param time_window_col A character specifying the name of time window column
+#' @param custom_var_list A character vector provides the list of additional
+#' columns
+#' @param group_var A character specifying the name of grouping column
+#' @param test Optional named list of statistical tests
+#' (e.g. age ~ "wilcox.test").
 #'
-#' @importFrom dplyr left_join group_by summarise dplyr mutate case_when n
-#' filter
+#' @importFrom dplyr left_join group_by mutate case_when n filter n_distinct
 #' @import checkmate
 #' @returns dataframe with HCRU estimates.
 #' @export
@@ -45,6 +53,7 @@ estimate_hcru = function(data,
                          setting_col = "care_setting",
                          cost_col = "cost_usd",
                          readmission_col = "readmission",
+                         time_window_col = "period",
                          los_col = "length_of_stay",
                          custom_var_list = NULL,
                          pre_days = 180,
@@ -63,12 +72,14 @@ estimate_hcru = function(data,
   checkmate::assert_character(visit_col, min.chars = 1)
   checkmate::assert_character(encounter_id_col, min.chars = 1)
   checkmate::assert_character(setting_col, min.chars = 1)
+  checkmate::assert_character(readmission_col, min.chars = 1)
+  checkmate::assert_character(time_window_col, min.chars = 1)
   checkmate::assert_numeric(pre_days)
   checkmate::assert_numeric(post_days)
   checkmate::assert_numeric(readmission_days_rule)
   checkmate::assert_character(cost_col, null.ok = TRUE)
   checkmate::assert_character(group_var, null.ok = TRUE)
-  checkmate::assert_character(test, null.ok = TRUE)
+  checkmate::assert_list(test, null.ok = TRUE)
   checkmate::check_logical(gt_output)
 
   # Create a var_list
@@ -101,7 +112,7 @@ estimate_hcru = function(data,
                            cost_col,
                            los_col,
                            readmission_col,
-                           time_window)
+                           time_window_col)
 
   # Summarize by settings using gtsummary
   if(gt_output) {
@@ -113,10 +124,10 @@ estimate_hcru = function(data,
 
   # Save output in the list object
   if(gt_output) {
-    final_ouput <- list("Summary by settings using dplyr": summary1,
-                        "Summary by settings using gtsummary": summary2)
+    final_output <- list("Summary by settings using dplyr" = summary1,
+                        "Summary by settings using gtsummary" = summary2)
   } else {
-    final_ouput <- list("Summary by settings using dplyr": summary1)
+    final_output <- list("Summary by settings using dplyr" = summary1)
   }
   return(final_output)
 }

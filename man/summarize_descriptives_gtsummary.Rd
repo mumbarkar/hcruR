@@ -18,7 +18,8 @@ summarize_descriptives_gtsummary(
 
 \item{group_var}{Optional quoted grouping variable (e.g. cohort).}
 
-\item{test}{Optional named list of statistical tests (e.g. age ~ "wilcox.test").}
+\item{test}{Optional named list of statistical tests
+(e.g. age ~ "wilcox.test").}
 }
 \value{
 A gtsummary table object

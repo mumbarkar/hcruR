@@ -13,15 +13,29 @@ summarize_descriptives(
   cost_col = "cost_usd",
   los_col = "length_of_stay",
   readmission_col = "readmission",
-  time_window = "period"
+  time_window_col = "period"
 )
 }
 \arguments{
 \item{data}{A dataframe with variables to summarize.}
 
-\item{var_list}{Optional quoted variable list (e.g. care_setting).}
+\item{patient_id_col}{A character specifying the name of patient
+identifier column}
 
-\item{group_var}{Optional quoted grouping variable (e.g. cohort).}
+\item{setting_col}{A character specifying the name of HRCU setting column}
+
+\item{cohort_col}{A character specifying the name of cohort column}
+
+\item{encounter_id_col}{A character specifying the name of encounter/claim
+column}
+
+\item{cost_col}{A character specifying the name of cost column}
+
+\item{los_col}{A character specifying the name of length of stay column}
+
+\item{readmission_col}{A character specifying the name of readmission column}
+
+\item{time_window_col}{A character specifying the name of time window column}
 }
 \value{
 A table object

@@ -25,7 +25,7 @@
 #' @param readmission_days_rule Rule for how many days can be permissible to
 #' define readmission criteria in AP setting (default 30 days)
 #'
-#' @importFrom dplyr select left_join group_by summarise mutate case_when n
+#' @importFrom dplyr select left_join group_by mutate case_when n
 #' filter
 #' @import checkmate
 #'
@@ -93,8 +93,7 @@ preproc_hcru_fun = function(data,
         TRUE ~ NA_character_
       )
     ) |>
-    dplyr::filter(!is.na(time_window)) |>
-    dplyr::select(-time_window)
+    dplyr::filter(!is.na(.data[["time_window"]]))
 
   # Prepare Length of stay (LOS)
   data <- data |>
@@ -123,7 +122,8 @@ preproc_hcru_fun = function(data,
 #' @param data A dataframe with variables to summarize.
 #' @param var_list Optional quoted variable list (e.g. care_setting).
 #' @param group_var Optional quoted grouping variable (e.g. cohort).
-#' @param test Optional named list of statistical tests (e.g. age ~ "wilcox.test").
+#' @param test Optional named list of statistical tests
+#' (e.g. age ~ "wilcox.test").
 #'
 #' @importFrom gtsummary tbl_summary add_overall add_p modify_header add_n
 #' modify_spanning_header all_continuous all_categorical all_stat_cols
@@ -132,16 +132,16 @@ preproc_hcru_fun = function(data,
 #' @return A gtsummary table object
 #' @export
 #'
-summarize_descriptives_gtsummary <- function(data, var_list = NULL, group_var = NULL, test = NULL) {
-  if (!requireNamespace("gtsummary", quietly = TRUE)) {
-    stop("Please install the 'gtsummary' package first.")
-  }
-
+summarize_descriptives_gtsummary <- function(data,
+                                             var_list = NULL,
+                                             group_var = NULL,
+                                             test = NULL
+) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(var_list, null.ok = TRUE)
   checkmate::assert_character(group_var, null.ok = TRUE)
-  checkmate::assert_character(test, null.ok = TRUE)
+  checkmate::assert_list(test, null.ok = TRUE)
 
   # Define custom stats for continuous & categorical variables
   stat_list <- list(
@@ -203,46 +203,65 @@ summarize_descriptives_gtsummary <- function(data, var_list = NULL, group_var = 
 #' Generate Detailed Descriptive Statistics
 #'
 #' @param data A dataframe with variables to summarize.
-#' @param var_list Optional quoted variable list (e.g. care_setting).
-#' @param group_var Optional quoted grouping variable (e.g. cohort).
+#' @param patient_id_col A character specifying the name of patient
+#' identifier column
+#' @param setting_col A character specifying the name of HRCU setting column
+#' @param cohort_col A character specifying the name of cohort column
+#' @param encounter_id_col A character specifying the name of encounter/claim
+#' column
+#' @param cost_col A character specifying the name of cost column
+#' @param los_col A character specifying the name of length of stay column
+#' @param readmission_col A character specifying the name of readmission column
+#' @param time_window_col A character specifying the name of time window column
 #'
-#' @importFrom dplyr select left_join group_by summarise mutate case_when n
-#' filter ungroup
+#' @importFrom dplyr select left_join group_by reframe mutate case_when n
+#' filter ungroup n_distinct if_else distinct
 #' @import checkmate
 #'
 #' @return A table object
 #' @export
 #'
 summarize_descriptives <- function(data,
-                                   patient_id_col = "patient_id",
-                                   setting_col = "care_setting",
-                                   cohort_col = "cohort",
-                                   encounter_id_col = "encounter_id",
-                                   cost_col = "cost_usd",
-                                   los_col = "length_of_stay",
-                                   readmission_col = "readmission",
-                                   time_window = "period") {
+                                    patient_id_col = "patient_id",
+                                    setting_col = "care_setting",
+                                    cohort_col = "cohort",
+                                    encounter_id_col = "encounter_id",
+                                    cost_col = "cost_usd",
+                                    los_col = "length_of_stay",
+                                    readmission_col = "readmission",
+                                    time_window_col = "period") {
 
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
-  checkmate::assert_character(cohort_col, null.ok = TRUE)
+  checkmate::assert_character(patient_id_col, min.chars = 1)
+  checkmate::assert_character(cohort_col, min.chars = 1)
+  checkmate::assert_character(encounter_id_col, min.chars = 1)
+  checkmate::assert_character(setting_col, min.chars = 1)
+  checkmate::assert_character(readmission_col, min.chars = 1)
+  checkmate::assert_character(time_window_col, min.chars = 1)
+  checkmate::assert_character(cost_col, min.chars = 1)
+  checkmate::assert_character(los_col, min.chars = 1)
+  checkmate::assert_character(readmission_col, min.chars = 1)
+  checkmate::assert_character(time_window_col, min.chars = 1)
 
+  # Generate summary
   summary_df <- data |>
-    dplyr::group_by(.data[[cohort_col]], .data[[setting_col]], .data[[time_window]]) |>
-    dplyr::summarise(
-      Patients = n_distinct(.data[[patient_id_col]]),
-      Visits = n_distinct(.data[[encounter_id_col]]),
+    dplyr::group_by(.data[[cohort_col]], .data[[setting_col]], .data[[time_window_col]]) |>
+    dplyr::reframe(
+      Patients = dplyr::n_distinct(.data[[patient_id_col]]),
+      Visits = dplyr::n_distinct(.data[[encounter_id_col]]),
       Cost = sum(.data[[cost_col]], na.rm = TRUE),
-      Avg_visits_per_patient = round(Visits / Patients, 2),
-      Avg_cost_per_patient = round(Cost / Patients, 2),
-      Avg_LOS = ifelse(first(.data[[setting_col]]) == "IP",
+      Avg_visits_per_patient = round(.data[["Visits"]] / .data[["Patients"]], 2),
+      Avg_cost_per_patient = round(.data[["Cost"]] / .data[["Patients"]], 2),
+      Avg_LOS = dplyr::if_else(.data[[setting_col]] == "IP",
                        round(mean(.data[[los_col]], na.rm = TRUE), 2),
                        NA_real_),
-      Readmit_30d_Rate = ifelse(first(.data[[setting_col]]) == "IP",
+      Readmit_30d_Rate = dplyr::if_else(.data[[setting_col]] == "IP",
                                 round(mean(.data[[readmission_col]], na.rm = TRUE) * 100, 2),
                                 NA_real_)
     ) |>
-    dplyr::ungroup()
+    dplyr::ungroup() |>
+    dplyr::distinct()
 
   return(summary_df)
 }
