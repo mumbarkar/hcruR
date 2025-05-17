@@ -40,7 +40,8 @@ test_that("estimate_hcru returns both summaries when gt_output = TRUE", {
 
   result <- estimate_hcru(df, gt_output = TRUE)
 
-  expect_named(result, c("Summary by settings using dplyr", "Summary by settings using gtsummary"))
+  expect_named(result, c("Summary by settings using dplyr",
+                         "Summary by settings using gtsummary"))
   expect_s3_class(result[["Summary by settings using gtsummary"]], "gtsummary")
 })
 

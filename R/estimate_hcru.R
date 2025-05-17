@@ -56,26 +56,26 @@
 #' \dontrun{
 #' estimate_hcru(data = hcru_sample_data)
 #' }
-estimate_hcru = function(data,
-                         cohort_col = "cohort",
-                         patient_id_col = "patient_id",
-                         admit_col = "admission_date",
-                         discharge_col = "discharge_date",
-                         index_col = "index_date",
-                         visit_col = "visit_date",
-                         encounter_id_col = "encounter_id",
-                         setting_col = "care_setting",
-                         cost_col = "cost_usd",
-                         readmission_col = "readmission",
-                         time_window_col = "period",
-                         los_col = "length_of_stay",
-                         custom_var_list = NULL,
-                         pre_days = 180,
-                         post_days = 365,
-                         readmission_days_rule = 30,
-                         group_var = "cohort",
-                         test = NULL,
-                         gt_output = FALSE) {
+estimate_hcru <- function(data,
+                          cohort_col = "cohort",
+                          patient_id_col = "patient_id",
+                          admit_col = "admission_date",
+                          discharge_col = "discharge_date",
+                          index_col = "index_date",
+                          visit_col = "visit_date",
+                          encounter_id_col = "encounter_id",
+                          setting_col = "care_setting",
+                          cost_col = "cost_usd",
+                          readmission_col = "readmission",
+                          time_window_col = "period",
+                          los_col = "length_of_stay",
+                          custom_var_list = NULL,
+                          pre_days = 180,
+                          post_days = 365,
+                          readmission_days_rule = 30,
+                          group_var = "cohort",
+                          test = NULL,
+                          gt_output = FALSE) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(cohort_col, min.chars = 1)
@@ -113,7 +113,7 @@ estimate_hcru = function(data,
                      visit_col,
                      encounter_id_col,
                      setting_col,
-                     pre_days ,
+                     pre_days,
                      post_days,
                      readmission_days_rule)
 
@@ -129,17 +129,17 @@ estimate_hcru = function(data,
                            time_window_col)
 
   # Summarize by settings using gtsummary
-  if(gt_output) {
+  if (gt_output) {
     summary2 <- hcru_data |>
-      summarize_descriptives_gtsummary(var_list = var_list,
-                                       group_var = group_var,
-                                       test = test)
+      summarize_descriptives_gt(var_list = var_list,
+                                group_var = group_var,
+                                test = test)
   }
 
   # Save output in the list object
-  if(gt_output) {
+  if (gt_output) {
     final_output <- list("Summary by settings using dplyr" = summary1,
-                        "Summary by settings using gtsummary" = summary2)
+                         "Summary by settings using gtsummary" = summary2)
   } else {
     final_output <- list("Summary by settings using dplyr" = summary1)
   }

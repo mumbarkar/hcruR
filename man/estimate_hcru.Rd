@@ -73,20 +73,30 @@ define readmission criteria in AP setting (default 30 days)}
 
 \item{group_var}{A character specifying the name of grouping column}
 
-\item{test}{Optional named list of statistical tests
-(e.g. age ~ "wilcox.test").}
+\item{test}{An optional named list of statistical tests
+(e.g., \code{list(age = "wilcox.test")}).}
 
-\item{gt_output}{A logical values specifying that whether gtsummary output
-should be generated or not}
+\item{gt_output}{Logical; if \code{TRUE}, also returns output formatted
+using \pkg{gtsummary} (default is \code{FALSE}).}
 }
 \value{
-dataframe with HCRU estimates.
+A list containing one or two summary data frames:
+\describe{
+  \item{Summary by settings using dplyr}{A descriptive summary of HCRU
+  metrics by cohort, setting, and time window.}
+  \item{Summary by settings using gtsummary (optional)}{Formatted summary
+  statistics using \pkg{gtsummary}, if \code{gt_output = TRUE}.}
+}
 }
 \description{
-This function calculates an estimates of heath care resource utilization
-(HCRU) for a given electronic health record data for a given set of settings
-e.g. IP, OP, ED/ER, etc.
+This function calculates estimates of healthcare resource utilization (HCRU)
+from electronic health record data across various care settings
+(e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
+encounters, costs, length of stay, and readmission rates for pre- and
+post-index periods
 }
 \examples{
+\dontrun{
 estimate_hcru(data = hcru_sample_data)
+}
 }

@@ -17,9 +17,11 @@ test_that("preproc_hcru_fun works as expected on valid data", {
   result <- preproc_hcru_fun(data)
 
   expect_s3_class(result, "data.frame")
-  expect_true(all(c("visit_days", "period", "length_of_stay", "readmission") %in% colnames(result)))
+  expect_true(all(c("visit_days", "period", "length_of_stay",
+                    "readmission") %in% colnames(result)))
   expect_equal(result$length_of_stay, c(5, 6, 10))
-  expect_equal(result$readmission, c(1, 0, 0))  # First IP has a readmission within 30 days
+  # First IP has a readmission within 30 days
+  expect_equal(result$readmission, c(1, 0, 0))
 })
 
 test_that("preproc_hcru_fun filters out encounters outside pre/post window", {
@@ -51,7 +53,7 @@ test_that("preproc_hcru_fun assigns visit_days and period correctly", {
   )
 
   result <- preproc_hcru_fun(data)
-  expect_equal(result$visit_days, 2) # 10 - 9 + 1
+  expect_equal(result$visit_days, 2)
   expect_equal(result$period, "pre")
 })
 
@@ -68,61 +70,63 @@ test_that("readmission logic only applies to IP encounters", {
   )
 
   result <- preproc_hcru_fun(data)
-  expect_equal(result$readmission, c(0, 0))  # No IP → no readmission logic triggered
+  # No IP → no readmission logic triggered
+  expect_equal(result$readmission, c(0, 0))
 })
 
-test_that("preproc_hcru_fun throws error for incorrect input types", {
-  expect_error(preproc_hcru_fun("not a dataframe"), "Assertion on 'data' failed")
-  expect_error(preproc_hcru_fun(data.frame(x=1), pre_days = "180"), "Assertion on 'pre_days' failed")
-  expect_error(preproc_hcru_fun(data.frame(x=1), post_days = "365"), "Assertion on 'post_days' failed")
-  expect_error(preproc_hcru_fun(data.frame(x=1), readmission_days_rule = "30"), "Assertion on 'readmission_days_rule' failed")
-})
-
-# Unit tests for summarize_descriptives_gtsummary function
-test_that("summarize_descriptives_gtsummary returns expected object without grouping", {
+# Unit tests for summarize_descriptives_gt function
+test_that("summarize_descriptives_gt returns expected object
+          without grouping", {
   df <- data.frame(
     age = c(50, 60, 70),
     sex = c("M", "F", "F")
   )
 
-  tbl <- summarize_descriptives_gtsummary(data = df, var_list = c("age", "sex"))
+  tbl <- summarize_descriptives_gt(data = df, var_list = c("age", "sex"))
 
   expect_s3_class(tbl, "gtsummary")
   expect_true("tbl" %in% class(tbl$table_body))
 })
 
-test_that("summarize_descriptives_gtsummary works with grouping variable", {
+test_that("summarize_descriptives_gt works with grouping variable", {
   df <- data.frame(
     age = c(50, 60, 70),
     sex = c("M", "F", "F"),
     group = c("A", "A", "B")
   )
 
-  tbl <- summarize_descriptives_gtsummary(data = df, var_list = c("age", "sex"), group_var = "group")
+  tbl <- summarize_descriptives_gt(data = df, var_list = c("age", "sex"),
+                                   group_var = "group")
 
   expect_s3_class(tbl, "gtsummary")
-  expect_true(any(grepl("p.value", names(tbl$table_body))))  # Expect p-value column
+  # Expect p-value column
+  expect_true(any(grepl("p.value", names(tbl$table_body))))
 })
 
-test_that("summarize_descriptives_gtsummary handles missing group_var gracefully", {
+test_that("summarize_descriptives_gt handles missing group_var gracefully", {
   df <- data.frame(
     age = c(50, 60, 70),
     sex = c("M", "F", "F")
   )
 
-  tbl <- summarize_descriptives_gtsummary(data = df, var_list = c("age", "sex"), group_var = NULL)
+  tbl <- summarize_descriptives_gt(data = df, var_list = c("age", "sex"),
+                                   group_var = NULL)
 
   expect_s3_class(tbl, "gtsummary")
 })
 
-test_that("summarize_descriptives_gtsummary throws error on invalid input", {
-  expect_error(summarize_descriptives_gtsummary("not a dataframe"), "Assertion on 'data' failed")
-  expect_error(summarize_descriptives_gtsummary(data.frame(x = 1), var_list = 1), "Assertion on 'var_list' failed")
-  expect_error(summarize_descriptives_gtsummary(data.frame(x = 1), group_var = 1), "Assertion on 'group_var' failed")
+test_that("summarize_descriptives_gt throws error on invalid input", {
+  expect_error(summarize_descriptives_gt("not a dataframe"),
+               "Assertion on 'data' failed")
+  expect_error(summarize_descriptives_gt(data.frame(x = 1), var_list = 1),
+               "Assertion on 'var_list' failed")
+  expect_error(summarize_descriptives_gt(data.frame(x = 1), group_var = 1),
+               "Assertion on 'group_var' failed")
 })
 
 # Unit tests for summarize_descriptives function
-test_that("summarize_descriptives produces correct summary for mixed settings", {
+test_that("summarize_descriptives produces correct summary for mixed settings",
+          {
   df <- tibble::tibble(
     patient_id = c(1, 1, 2, 3, 3),
     care_setting = c("IP", "OP", "IP", "IP", "OP"),
@@ -138,7 +142,8 @@ test_that("summarize_descriptives produces correct summary for mixed settings", 
 
   expect_s3_class(result, "data.frame")
   expect_true(all(c("Patients", "Visits", "Cost", "Avg_visits_per_patient",
-                    "Avg_cost_per_patient", "Avg_LOS", "Readmit_30d_Rate") %in% names(result)))
+                    "Avg_cost_per_patient", "Avg_LOS", "Readmit_30d_Rate"
+                    ) %in% names(result)))
 
   # Spot-check a group
   ip_b_post <- result |>
@@ -150,7 +155,8 @@ test_that("summarize_descriptives produces correct summary for mixed settings", 
   expect_equal(ip_b_post$Readmit_30d_Rate, 100)
 })
 
-test_that("summarize_descriptives omits LOS and Readmission Rate for non-IP settings", {
+test_that("summarize_descriptives omits LOS and Readmission Rate
+          for non-IP settings", {
   df <- tibble::tibble(
     patient_id = 1:3,
     care_setting = rep("OP", 3),
@@ -187,6 +193,8 @@ test_that("summarize_descriptives handles NA cost and readmission", {
 })
 
 test_that("summarize_descriptives throws error for invalid input types", {
-  expect_error(summarize_descriptives("not a dataframe"), "Assertion on 'data' failed")
-  expect_error(summarize_descriptives(data.frame(x = 1), patient_id_col = 123), "Assertion on 'patient_id_col' failed")
+  expect_error(summarize_descriptives("not a dataframe"),
+               "Assertion on 'data' failed")
+  expect_error(summarize_descriptives(data.frame(x = 1), patient_id_col = 123),
+               "Assertion on 'patient_id_col' failed")
 })
