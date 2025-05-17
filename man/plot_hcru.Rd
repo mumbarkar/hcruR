@@ -2,18 +2,51 @@
 % Please edit documentation in R/plot_hcru_trends.R
 \name{plot_hcru}
 \alias{plot_hcru}
-\title{Plot HCRU Summary}
+\title{plot_hcru}
 \usage{
-plot_hcru(hcru_group_summary, metric = "mean_count")
+plot_hcru(
+  summary_df,
+  x_var = "period",
+  y_var = "Cost",
+  cohort_col = "cohort",
+  facet_var = "care_setting",
+  facet_var_n = 3,
+  title = "Average total cost by domain and cohort",
+  x_lable = "Healthcare Setting (Domain)",
+  y_lable = "Average total cost",
+  fill_lable = "Cohort"
+)
 }
 \arguments{
-\item{hcru_group_summary}{Output from compare_hcru_cohorts()}
+\item{summary_df}{Output from estimate_hcru()}
 
-\item{metric}{Either 'mean_count' or 'mean_cost'}
+\item{x_var}{A character specifying column name to be plotted on x-axis}
+
+\item{y_var}{A character specifying column name to be plotted on y-axis}
+
+\item{cohort_col}{A character}
+
+\item{facet_var}{A character specifying column name to generate the plot
+output in columns}
+
+\item{facet_var_n}{A character specifying column name to generate the plot
+output in n number of columns}
+
+\item{title}{A character}
+
+\item{x_lable}{A character}
+
+\item{y_lable}{A character}
+
+\item{fill_lable}{A character}
 }
 \value{
 ggplot object
 }
 \description{
-Plot HCRU Summary
+This plot provide the visualization of the events of the settings/domains
+grouped by cohort and time window.
+}
+\details{
+Plot HCRU Event Summary
 }

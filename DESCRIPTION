@@ -5,9 +5,10 @@ Authors@R: person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", ro
 Description: Tools to estimate and compare healthcare resource utilization (HCRU) by domain and cohort. Supports cohort-based event counting, cost summarization, time window analysis, and plotting for RWE studies.
 Depends: R (>= 4.5.0)
 Imports:
+    checkmate,
     dplyr,
     ggplot2,
-    stats
+    gtsummary
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

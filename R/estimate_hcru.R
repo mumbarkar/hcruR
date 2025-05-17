@@ -1,44 +1,133 @@
-#' Estimate HCRU Events and Costs
+#' @title estimate_hcru
+#' @description
+#' This function calculates an estimates of heath care resource utilization
+#' (HCRU) for a given electronic health record data for a given set of settings
+#' e.g. IP, OP, ED/ER, etc.
 #'
-#' @param cohort Dataframe with person_id and index_date
-#' @param hcru Dataframe with person_id, event_date, domain, and cost
-#' @param pre_days Number of days before index (default 180)
-#' @param post_days Number of days after index (default 365)
-#' @importFrom dplyr left_join
-#' @importFrom dplyr group_by
-#' @importFrom dplyr summarise
-#' @importFrom dplyr mutate
-#' @importFrom dplyr case_when
-#' @importFrom dplyr n
-#' @importFrom dplyr filter
+#' @param data A dataframe specifying the health care details
+#' @param cohort_col A character specifying the name of the cohort column
+#' @param patient_id_col A character specifying the name of the patient
+#' identifier column
+#' @param admit_col A character specifying the name of the date of admission
+#' column
+#' @param discharge_col A character specifying the name of the date of
+#' discharge column
+#' @param index_col A character specifying the name of the index date or
+#' diagnosis column
+#' @param visit_col A character specifying the name of the date of
+#' visit/claim column
+#' @param encounter_id_col A character specifying the name of the
+#' encounter/claim column
+#' @param setting_col A character specifying the name of the HCRU
+#' setting column e.g. IP, ED, OP, etc.
+#' @param pre_days Number of days before index (default 180 days)
+#' @param post_days Number of days after index (default 365 days)
+#' @param readmission_days_rule Rule for how many days can be permissible to
+#' define readmission criteria in AP setting (default 30 days)
+#' @param gt_output A logical values specifying that whether gtsummary output
+#' should be generated or not
+#' @param cost_col A character specifying the name of cost column
+#' @param los_col A character specifying the name of length of stay column
+#' @param readmission_col A character specifying the name of readmission column
+#' @param time_window_col A character specifying the name of time window column
+#' @param custom_var_list A character vector provides the list of additional
+#' columns
+#' @param group_var A character specifying the name of grouping column
+#' @param test Optional named list of statistical tests
+#' (e.g. age ~ "wilcox.test").
 #'
-#' @return Dataframe with counts and costs per patient per domain and time
-#' window
+#' @importFrom dplyr left_join group_by mutate case_when n filter n_distinct
+#' @import checkmate
+#' @returns dataframe with HCRU estimates.
 #' @export
-estimate_hcru <- function(cohort, hcru, pre_days = 180, post_days = 365) {
-  hcru <- dplyr::left_join(hcru, cohort, by = "person_id") |>
-    dplyr::mutate(
-      relative_day = as.integer(
-        .data[["event_date"]] - .data[["index_date"]]
-      ),
-      time_window = case_when(
-        .data[["relative_day"]] < 0 & .data[["relative_day"]] >= pre_days ~
-          "pre",
-        .data[["relative_day"]] >= 0 & .data[["relative_day"]] <= post_days ~
-          "post",
-        TRUE ~ NA_character_
-      )
-    ) |>
-    dplyr::filter(!is.na(.data[["time_window"]]))
+#'
+#' @examples estimate_hcru(data = hcru_sample_data)
+estimate_hcru = function(data,
+                         cohort_col = "cohort",
+                         patient_id_col = "patient_id",
+                         admit_col = "admission_date",
+                         discharge_col = "discharge_date",
+                         index_col = "index_date",
+                         visit_col = "visit_date",
+                         encounter_id_col = "encounter_id",
+                         setting_col = "care_setting",
+                         cost_col = "cost_usd",
+                         readmission_col = "readmission",
+                         time_window_col = "period",
+                         los_col = "length_of_stay",
+                         custom_var_list = NULL,
+                         pre_days = 180,
+                         post_days = 365,
+                         readmission_days_rule = 30,
+                         group_var = "cohort",
+                         test = NULL,
+                         gt_output = FALSE) {
+  # Primary input checks
+  checkmate::assert_data_frame(data, min.rows = 1)
+  checkmate::assert_character(cohort_col, min.chars = 1)
+  checkmate::assert_character(patient_id_col, min.chars = 1)
+  checkmate::assert_character(admit_col, min.chars = 1)
+  checkmate::assert_character(discharge_col, min.chars = 1)
+  checkmate::assert_character(index_col, min.chars = 1)
+  checkmate::assert_character(visit_col, min.chars = 1)
+  checkmate::assert_character(encounter_id_col, min.chars = 1)
+  checkmate::assert_character(setting_col, min.chars = 1)
+  checkmate::assert_character(readmission_col, min.chars = 1)
+  checkmate::assert_character(time_window_col, min.chars = 1)
+  checkmate::assert_numeric(pre_days)
+  checkmate::assert_numeric(post_days)
+  checkmate::assert_numeric(readmission_days_rule)
+  checkmate::assert_character(cost_col, null.ok = TRUE)
+  checkmate::assert_character(group_var, null.ok = TRUE)
+  checkmate::assert_list(test, null.ok = TRUE)
+  checkmate::check_logical(gt_output)
 
-  summary <- hcru |>
-    dplyr::group_by(
-      .data[["person_id"]], .data[["domain"]], .data[["time_window"]]
-    ) |>
-    dplyr::summarise(
-      event_count = dplyr::n(),
-      total_cost = sum(.data[["cost"]], na.rm = TRUE),
-      .groups = "drop"
-    )
-  return(summary)
+  # Create a var_list
+  if (!is.null(custom_var_list)) {
+    var_list <- c(cost_col, los_col, readmission_col, custom_var_list)
+  } else {
+    var_list <- c(cost_col, los_col, readmission_col)
+  }
+
+  # Pre-process HCRU data
+  hcru_data <- data |>
+    preproc_hcru_fun(cohort_col,
+                     patient_id_col,
+                     admit_col,
+                     discharge_col,
+                     index_col,
+                     visit_col,
+                     encounter_id_col,
+                     setting_col,
+                     pre_days ,
+                     post_days,
+                     readmission_days_rule)
+
+  # Summarize by settings using dplyr
+  summary1 <- hcru_data |>
+    summarize_descriptives(patient_id_col,
+                           setting_col,
+                           cohort_col,
+                           encounter_id_col,
+                           cost_col,
+                           los_col,
+                           readmission_col,
+                           time_window_col)
+
+  # Summarize by settings using gtsummary
+  if(gt_output) {
+    summary2 <- hcru_data |>
+      summarize_descriptives_gtsummary(var_list = var_list,
+                                       group_var = group_var,
+                                       test = test)
+  }
+
+  # Save output in the list object
+  if(gt_output) {
+    final_output <- list("Summary by settings using dplyr" = summary1,
+                        "Summary by settings using gtsummary" = summary2)
+  } else {
+    final_output <- list("Summary by settings using dplyr" = summary1)
+  }
+  return(final_output)
 }
