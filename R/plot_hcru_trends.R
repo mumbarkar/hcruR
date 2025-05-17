@@ -1,7 +1,7 @@
 #' Plot HCRU Event Summary
 #' @title plot_hcru
 #' @description
-#' This plot provide the visualization of the events of the settings/domains
+#' This function provide the visualization of the events of the settings/domains
 #' grouped by cohort and time window.
 #'
 #' @param summary_df Output from estimate_hcru()
