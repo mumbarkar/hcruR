@@ -1,8 +1,10 @@
 #' @title estimate_hcru
 #' @description
-#' This function calculates an estimates of heath care resource utilization
-#' (HCRU) for a given electronic health record data for a given set of settings
-#' e.g. IP, OP, ED/ER, etc.
+#' This function calculates estimates of healthcare resource utilization (HCRU)
+#' from electronic health record data across various care settings
+#' (e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
+#' encounters, costs, length of stay, and readmission rates for pre- and
+#' post-index periods
 #'
 #' @param data A dataframe specifying the health care details
 #' @param cohort_col A character specifying the name of the cohort column
@@ -24,8 +26,8 @@
 #' @param post_days Number of days after index (default 365 days)
 #' @param readmission_days_rule Rule for how many days can be permissible to
 #' define readmission criteria in AP setting (default 30 days)
-#' @param gt_output A logical values specifying that whether gtsummary output
-#' should be generated or not
+#' @param gt_output Logical; if \code{TRUE}, also returns output formatted
+#' using \pkg{gtsummary} (default is \code{FALSE}).
 #' @param cost_col A character specifying the name of cost column
 #' @param los_col A character specifying the name of length of stay column
 #' @param readmission_col A character specifying the name of readmission column
@@ -33,35 +35,47 @@
 #' @param custom_var_list A character vector provides the list of additional
 #' columns
 #' @param group_var A character specifying the name of grouping column
-#' @param test Optional named list of statistical tests
-#' (e.g. age ~ "wilcox.test").
+#' @param test An optional named list of statistical tests
+#' (e.g., \code{list(age = "wilcox.test")}).
 #'
 #' @importFrom dplyr left_join group_by mutate case_when n filter n_distinct
-#' @import checkmate
-#' @returns dataframe with HCRU estimates.
+#' @importFrom checkmate assert_data_frame assert_character assert_numeric
+#' assert_list check_logical
+#'
+#' @return A list containing one or two summary data frames:
+#' \describe{
+#'   \item{Summary by settings using dplyr}{A descriptive summary of HCRU
+#'   metrics by cohort, setting, and time window.}
+#'   \item{Summary by settings using gtsummary (optional)}{Formatted summary
+#'   statistics using \pkg{gtsummary}, if \code{gt_output = TRUE}.}
+#' }
+#'
 #' @export
 #'
-#' @examples estimate_hcru(data = hcru_sample_data)
-estimate_hcru = function(data,
-                         cohort_col = "cohort",
-                         patient_id_col = "patient_id",
-                         admit_col = "admission_date",
-                         discharge_col = "discharge_date",
-                         index_col = "index_date",
-                         visit_col = "visit_date",
-                         encounter_id_col = "encounter_id",
-                         setting_col = "care_setting",
-                         cost_col = "cost_usd",
-                         readmission_col = "readmission",
-                         time_window_col = "period",
-                         los_col = "length_of_stay",
-                         custom_var_list = NULL,
-                         pre_days = 180,
-                         post_days = 365,
-                         readmission_days_rule = 30,
-                         group_var = "cohort",
-                         test = NULL,
-                         gt_output = FALSE) {
+#' @examples
+#' \dontrun{
+#' estimate_hcru(data = hcru_sample_data)
+#' }
+estimate_hcru <- function(data,
+                          cohort_col = "cohort",
+                          patient_id_col = "patient_id",
+                          admit_col = "admission_date",
+                          discharge_col = "discharge_date",
+                          index_col = "index_date",
+                          visit_col = "visit_date",
+                          encounter_id_col = "encounter_id",
+                          setting_col = "care_setting",
+                          cost_col = "cost_usd",
+                          readmission_col = "readmission",
+                          time_window_col = "period",
+                          los_col = "length_of_stay",
+                          custom_var_list = NULL,
+                          pre_days = 180,
+                          post_days = 365,
+                          readmission_days_rule = 30,
+                          group_var = "cohort",
+                          test = NULL,
+                          gt_output = FALSE) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(cohort_col, min.chars = 1)
@@ -99,7 +113,7 @@ estimate_hcru = function(data,
                      visit_col,
                      encounter_id_col,
                      setting_col,
-                     pre_days ,
+                     pre_days,
                      post_days,
                      readmission_days_rule)
 
@@ -115,17 +129,17 @@ estimate_hcru = function(data,
                            time_window_col)
 
   # Summarize by settings using gtsummary
-  if(gt_output) {
+  if (gt_output) {
     summary2 <- hcru_data |>
-      summarize_descriptives_gtsummary(var_list = var_list,
-                                       group_var = group_var,
-                                       test = test)
+      summarize_descriptives_gt(var_list = var_list,
+                                group_var = group_var,
+                                test = test)
   }
 
   # Save output in the list object
-  if(gt_output) {
+  if (gt_output) {
     final_output <- list("Summary by settings using dplyr" = summary1,
-                        "Summary by settings using gtsummary" = summary2)
+                         "Summary by settings using gtsummary" = summary2)
   } else {
     final_output <- list("Summary by settings using dplyr" = summary1)
   }

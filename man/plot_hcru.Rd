@@ -44,7 +44,7 @@ output in n number of columns}
 ggplot object
 }
 \description{
-This plot provide the visualization of the events of the settings/domains
+This function provide the visualization of the events of the settings/domains
 grouped by cohort and time window.
 }
 \details{

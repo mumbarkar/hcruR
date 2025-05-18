@@ -33,7 +33,7 @@
 #' @export
 #'
 #' @examples preproc_hcru_fun(data = hcru_sample_data)
-preproc_hcru_fun = function(data,
+preproc_hcru_fun <- function(data,
                             cohort_col = "cohort",
                             patient_id_col = "patient_id",
                             admit_col = "admission_date",
@@ -88,8 +88,10 @@ preproc_hcru_fun = function(data,
   data <- data |>
     dplyr::mutate(
       time_window = dplyr::case_when(
-        .data[["period"]] == "pre" & .data[["visit_days"]] >=0 & .data[["visit_days"]] <= pre_days ~ "pre1",
-        .data[["period"]] == "post" & .data[["visit_days"]] >=0 & .data[["visit_days"]] <= post_days ~ "post1",
+        .data[["period"]] == "pre" & .data[["visit_days"]] >= 0 &
+          .data[["visit_days"]] <= pre_days ~ "pre1",
+        .data[["period"]] == "post" & .data[["visit_days"]] >= 0 &
+          .data[["visit_days"]] <= post_days ~ "post1",
         TRUE ~ NA_character_
       )
     ) |>
@@ -98,19 +100,28 @@ preproc_hcru_fun = function(data,
   # Prepare Length of stay (LOS)
   data <- data |>
     dplyr::mutate(
-      length_of_stay = as.numeric(.data[[discharge_col]] - .data[[admit_col]]) + 1
-    )
+      length_of_stay = as.numeric(
+        .data[[discharge_col]] - .data[[admit_col]]) + 1)
 
   # Readmission logic (IP only)
   final_data <- data |>
-    dplyr::arrange(.data[[cohort_col]], .data[[patient_id_col]], .data[[admit_col]]) |>
-    dplyr::group_by(.data[[cohort_col]], .data[[patient_id_col]], .data[[setting_col]]) |>
-    dplyr::mutate(next_admit = dplyr::lead(.data[[admit_col]]),
-                  days_to_next = as.numeric(.data[["next_admit"]] - .data[[discharge_col]]),
-                  readmission = ifelse(
-                    .data[[setting_col]] == "IP" &
-                      !is.na(.data[["days_to_next"]]) &
-                      .data[["days_to_next"]] <= as.numeric(readmission_days_rule), 1, 0)
+    dplyr::arrange(
+      .data[[cohort_col]], .data[[patient_id_col]], .data[[admit_col]]
+    ) |>
+    dplyr::group_by(
+      .data[[cohort_col]], .data[[patient_id_col]], .data[[setting_col]]
+    ) |>
+    dplyr::mutate(next_admit = dplyr::lead(
+      .data[[admit_col]]
+    ),
+    days_to_next = as.numeric(
+      .data[["next_admit"]] - .data[[discharge_col]]
+    ),
+    readmission = ifelse(
+      .data[[setting_col]] == "IP" &
+        !is.na(.data[["days_to_next"]]) &
+        .data[["days_to_next"]] <=
+        as.numeric(readmission_days_rule), 1, 0)
     ) |>
     dplyr::ungroup()
 
@@ -132,7 +143,7 @@ preproc_hcru_fun = function(data,
 #' @return A gtsummary table object
 #' @export
 #'
-summarize_descriptives_gtsummary <- function(data,
+summarize_descriptives_gt <- function(data,
                                              var_list = NULL,
                                              group_var = NULL,
                                              test = NULL
@@ -222,14 +233,14 @@ summarize_descriptives_gtsummary <- function(data,
 #' @export
 #'
 summarize_descriptives <- function(data,
-                                    patient_id_col = "patient_id",
-                                    setting_col = "care_setting",
-                                    cohort_col = "cohort",
-                                    encounter_id_col = "encounter_id",
-                                    cost_col = "cost_usd",
-                                    los_col = "length_of_stay",
-                                    readmission_col = "readmission",
-                                    time_window_col = "period") {
+                                   patient_id_col = "patient_id",
+                                   setting_col = "care_setting",
+                                   cohort_col = "cohort",
+                                   encounter_id_col = "encounter_id",
+                                   cost_col = "cost_usd",
+                                   los_col = "length_of_stay",
+                                   readmission_col = "readmission",
+                                   time_window_col = "period") {
 
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
@@ -246,19 +257,22 @@ summarize_descriptives <- function(data,
 
   # Generate summary
   summary_df <- data |>
-    dplyr::group_by(.data[[cohort_col]], .data[[setting_col]], .data[[time_window_col]]) |>
+    dplyr::group_by(
+      .data[[cohort_col]], .data[[setting_col]], .data[[time_window_col]]) |>
     dplyr::reframe(
       Patients = dplyr::n_distinct(.data[[patient_id_col]]),
       Visits = dplyr::n_distinct(.data[[encounter_id_col]]),
       Cost = sum(.data[[cost_col]], na.rm = TRUE),
-      Avg_visits_per_patient = round(.data[["Visits"]] / .data[["Patients"]], 2),
+      Avg_visits_per_patient = round(.data[["Visits"]] / .data[["Patients"]],
+                                     2),
       Avg_cost_per_patient = round(.data[["Cost"]] / .data[["Patients"]], 2),
       Avg_LOS = dplyr::if_else(.data[[setting_col]] == "IP",
-                       round(mean(.data[[los_col]], na.rm = TRUE), 2),
-                       NA_real_),
+                               round(mean(.data[[los_col]], na.rm = TRUE), 2),
+                               NA_real_),
       Readmit_30d_Rate = dplyr::if_else(.data[[setting_col]] == "IP",
-                                round(mean(.data[[readmission_col]], na.rm = TRUE) * 100, 2),
-                                NA_real_)
+                                        round(mean(.data[[readmission_col]],
+                                                   na.rm = TRUE) * 100, 2),
+                                        NA_real_)
     ) |>
     dplyr::ungroup() |>
     dplyr::distinct()

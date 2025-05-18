@@ -4,3 +4,8 @@
 ^\.Rproj\.user$
 ^\.github$
 ^LICENSE\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^doc$
+^Meta$
