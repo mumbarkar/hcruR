@@ -41,13 +41,19 @@ pak::pak("mumbarkar/hcruR")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
+This is a basic example which shows you how to solve a common problem:
+
+# Load library
 library(hcruR)
+
+## Generate HCRU summary using dplyr (this can be used for create HCRU plots)
 
 # Load sample data
 data(hcru_sample_data)
+head(hcru_sample_data)
 
-# Step 1: Estimate HCRU
-hcru_summary = estimate_hcru(data = hcru_sample_data,
+# Estimate HCRU
+hcru_summary <- estimate_hcru(data = hcru_sample_data,
                              cohort_col = "cohort",
                              patient_id_col = "patient_id",
                              admit_col = "admission_date",
@@ -67,20 +73,68 @@ hcru_summary = estimate_hcru(data = hcru_sample_data,
                              group_var = "cohort",
                              test = NULL,
                              gt_output = FALSE)
-# Step 3: Plot results
-p = plot_hcru(summary_df = hcru_summary$`Summary by settings using dplyr`,
-              x_var = "period",
-              y_var = "Cost",
-              cohort_col = "cohort",
-              facet_var = "care_setting",
-              facet_var_n = 3,
-              title = "Average total cost by domain and cohort",
-              x_lable = "Healthcare Setting (Domain)",
-              y_lable = "Average total cost",
-              fill_lable = "Cohort"
+
+hcru_summary
+
+## Generate HCRU summary using gtsummary (a publication ready output) 
+
+# Estimate HCRU
+hcru_summary_gt <- estimate_hcru(data = hcru_sample_data,
+                             cohort_col = "cohort",
+                             patient_id_col = "patient_id",
+                             admit_col = "admission_date",
+                             discharge_col = "discharge_date",
+                             index_col = "index_date",
+                             visit_col = "visit_date",
+                             encounter_id_col = "encounter_id",
+                             setting_col = "care_setting",
+                             cost_col = "cost_usd",
+                             readmission_col = "readmission",
+                             time_window_col = "period",
+                             los_col = "length_of_stay",
+                             custom_var_list = NULL,
+                             pre_days = 180,
+                             post_days = 365,
+                             readmission_days_rule = 30,
+                             group_var = "cohort",
+                             test = NULL,
+                             gt_output = TRUE)
+
+hcru_summary_gt
+
+## Generate the HCRU plot for average visits per patient by cohort and 
+time-line
+
+p_avg_visit <- plot_hcru(summary_df = hcru_summary$`Summary by settings using dplyr`,
+               x_var = "period",
+               y_var = "Avg_visits_per_patient",
+               cohort_col = "cohort",
+               facet_var = "care_setting",
+               facet_var_n = 3,
+               title = "Per patient average visits by domain and cohort",
+               x_lable = "Healthcare Setting (Domain)",
+               y_lable = "Average visits",
+               fill_lable = "Cohort"
 )
 
-p
+p_avg_visit
+
+## Generate the HCRU plot for average costs per patient by cohort and time-line
+
+p_avg_cost <- plot_hcru(summary_df = hcru_summary$`Summary by settings using dplyr`,
+               x_var = "period",
+               y_var = "Avg_cost_per_patient",
+               cohort_col = "cohort",
+               facet_var = "care_setting",
+               facet_var_n = 3,
+               title = "Per patient average cost by domain and cohort",
+               x_lable = "Healthcare Setting (Domain)",
+               y_lable = "Average costs",
+               fill_lable = "Cohort"
+)
+
+p_avg_cost
+
 ```
 
 ------------------------------------------------------------------------
