@@ -116,14 +116,17 @@ preproc_hcru_fun <- function(data,
     ),
     days_to_next = as.numeric(
       .data[["next_admit"]] - .data[[discharge_col]]
-    ),
-    readmission = ifelse(
-      .data[[setting_col]] == "IP" &
-        !is.na(.data[["days_to_next"]]) &
-        .data[["days_to_next"]] <=
-        as.numeric(readmission_days_rule), 1, 0)
-    ) |>
-    dplyr::ungroup()
+    )) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+    readmission = dplyr::case_when(
+      .data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
+        .data[["days_to_next"]] <= as.numeric(readmission_days_rule) ~ 1,
+      (.data[[setting_col]] == "IP" & is.na(.data[["days_to_next"]])) |
+        (.data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
+           .data[["days_to_next"]] > as.numeric(readmission_days_rule)) ~ 0,
+      TRUE ~ NA_integer_)
+    )
 
   return(final_data)
 }
@@ -139,39 +142,58 @@ preproc_hcru_fun <- function(data,
 #' @importFrom gtsummary tbl_summary add_overall add_p modify_header add_n
 #' modify_spanning_header all_continuous all_categorical all_stat_cols
 #' @import checkmate
+#' @import glue
 #'
 #' @return A gtsummary table object
 #' @export
 #'
 summarize_descriptives_gt <- function(data,
-                                             var_list = NULL,
-                                             group_var = NULL,
-                                             test = NULL
-) {
-  # Primary input checks
+                                      patient_id_col,
+                                      var_list = NULL,
+                                      group_var_main = NULL,  # e.g., "cohort"
+                                      group_var_by = NULL,    # e.g., "setting"
+                                      test = NULL) {
+
+  # Basic checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(var_list, null.ok = TRUE)
-  checkmate::assert_character(group_var, null.ok = TRUE)
+  checkmate::assert_character(group_var_main, len = 1)
+  checkmate::assert_character(group_var_by, len = 1)
   checkmate::assert_list(test, null.ok = TRUE)
 
-  # Define custom stats for continuous & categorical variables
-  stat_list <- list(
-    all_continuous() ~ c(
-      "Mean (SD)" = "{mean} ({sd})",
-      "Median (IQR)" = "{median} ({p25}, {p75})",
-      "Q1" = "{p25}",
-      "Q3" = "{p75}",
-      "Range" = "{min} - {max}"
-    )
-  )
+  # Unique settings (IP, OP, ED...)
+  settings <- unique(data[[group_var_by]])
 
-  if (!is.null(group_var)) {
+  # Iterate by setting
+  setting_tbls <- purrr::map(settings, function(setting) {
+    df_setting <- dplyr::filter(data, .data[[group_var_by]] == setting)
+
+    # Drop IP-only vars if not IP
+    vars_this <- var_list
+    if (setting != "IP") {
+      vars_this <- setdiff(vars_this, c("length_of_stay", "readmission"))
+    }
+
+    # Cohort group (control, treatment, etc.)
+    cohort_sym <- rlang::sym(group_var_main)
+
+    # Get N per group
+    n_df <- df_setting |>
+      dplyr::distinct(.data[[patient_id_col]], .data[[group_var_main]]) |>
+      dplyr::count(.data[[group_var_main]], name = "n") |>
+      dplyr::mutate(
+        colname = paste0("stat_", dplyr::row_number()),
+        header = glue::glue("{.data[[group_var_main]]}, N = {n}")
+      )
+    header_map <- stats::setNames(n_df$header, n_df$colname)
+
+    # Build summary
     tbl <- gtsummary::tbl_summary(
-      data = data,
-      by = {{ group_var }},
-      type = all_continuous() ~ "continuous2",
-      include = {{ var_list }},
-      missing = "ifany",
+      data = df_setting,
+      by = !!cohort_sym,
+      include = all_of(vars_this),
+      missing = "no",
+      type = list(all_continuous() ~ "continuous2"),
       statistic = list(
         all_continuous() ~ c(
           "Mean (SD)" = "{mean} ({sd})",
@@ -181,35 +203,31 @@ summarize_descriptives_gt <- function(data,
           "Range" = "{min} - {max}"
         )
       )
-    ) |>
-      gtsummary::add_n() |>
-      gtsummary::add_overall()
+    )
 
-    if (!is.null(test)) {
-      tbl <- tbl |> gtsummary::add_p(test = test)
-    } else {
-      tbl <- tbl |> gtsummary::add_p()
+    if (length(unique(df_setting[[group_var_main]])) > 1) {
+      tbl <- if (!is.null(test)) {
+        tbl |> gtsummary::add_p(test = test)
+      } else {
+        tbl |> gtsummary::add_p()
+      }
     }
 
     tbl <- tbl |>
-      gtsummary::modify_header(label = "**Variable**") |>
-      gtsummary::modify_spanning_header(gtsummary::all_stat_cols() ~ "**Group**") |>
-      # Apply bold styling to variable labels
+      gtsummary::modify_header(update = header_map) |>
+      gtsummary::modify_caption(glue::glue("**Summary Table**")) |>
       gtsummary::bold_labels()
-  } else {
-    tbl <- gtsummary::tbl_summary(
-      data = data,
-      missing = "ifany",
-      statistic = stat_list
-    ) |>
-      gtsummary::add_n() |>
-      gtsummary::modify_header(label = "**Variable**") |>
-      # Apply bold styling to variable labels
-      gtsummary::bold_labels()
-  }
 
-  return(tbl)
+    return(tbl)
+  })
+
+  # Merge all setting-wise cohort tables side-by-side
+  gtsummary::tbl_merge(
+    tbls = setting_tbls,
+    tab_spanner = settings
+  )
 }
+
 
 #' Generate Detailed Descriptive Statistics
 #'

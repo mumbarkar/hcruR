@@ -73,7 +73,8 @@ estimate_hcru <- function(data,
                           pre_days = 180,
                           post_days = 365,
                           readmission_days_rule = 30,
-                          group_var = "cohort",
+                          group_var_main = "cohort",
+                          group_var_by = "care_setting",
                           test = NULL,
                           gt_output = FALSE) {
   # Primary input checks
@@ -92,7 +93,8 @@ estimate_hcru <- function(data,
   checkmate::assert_numeric(post_days)
   checkmate::assert_numeric(readmission_days_rule)
   checkmate::assert_character(cost_col, null.ok = TRUE)
-  checkmate::assert_character(group_var, null.ok = TRUE)
+  checkmate::assert_character(group_var_main, null.ok = TRUE)
+  checkmate::assert_character(group_var_by, null.ok = TRUE)
   checkmate::assert_list(test, null.ok = TRUE)
   checkmate::check_logical(gt_output)
 
@@ -131,8 +133,10 @@ estimate_hcru <- function(data,
   # Summarize by settings using gtsummary
   if (gt_output) {
     summary2 <- hcru_data |>
-      summarize_descriptives_gt(var_list = var_list,
-                                group_var = group_var,
+      summarize_descriptives_gt(patient_id_col = patient_id_col,
+                                var_list = var_list,
+                                group_var_main = group_var_main,
+                                group_var_by = group_var_by,
                                 test = test)
   }
 
