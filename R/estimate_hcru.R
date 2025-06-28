@@ -76,7 +76,8 @@ estimate_hcru <- function(data,
                           group_var_main = "cohort",
                           group_var_by = "care_setting",
                           test = NULL,
-                          gt_output = FALSE) {
+                          timeline = "pre1",
+                          gt_output = TRUE) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(cohort_col, min.chars = 1)
@@ -96,7 +97,7 @@ estimate_hcru <- function(data,
   checkmate::assert_character(group_var_main, null.ok = TRUE)
   checkmate::assert_character(group_var_by, null.ok = TRUE)
   checkmate::assert_list(test, null.ok = TRUE)
-  checkmate::check_logical(gt_output)
+  checkmate::assert_character(timeline, null.ok = TRUE)
 
   # Create a var_list
   if (!is.null(custom_var_list)) {
@@ -128,17 +129,18 @@ estimate_hcru <- function(data,
                            cost_col,
                            los_col,
                            readmission_col,
-                           time_window_col)
+                           time_window_col = "time_window")
 
   # Summarize by settings using gtsummary
-  if (gt_output) {
-    summary2 <- hcru_data |>
-      summarize_descriptives_gt(patient_id_col = patient_id_col,
-                                var_list = var_list,
-                                group_var_main = group_var_main,
-                                group_var_by = group_var_by,
-                                test = test)
-  }
+  var_list <- c("Visits", "Cost", "LOS", "Readmit_cnt", "Visit_PPPM",
+                "Visit_PPPY", "Cost_PPPM", "Cost_PPPY")
+  summary2 <- summary1 |>
+    summarize_descriptives_gt(patient_id_col = patient_id_col,
+                              var_list = var_list,
+                              group_var_main = group_var_main,
+                              group_var_by = group_var_by,
+                              test = test,
+                              timeline = timeline)
 
   # Save output in the list object
   if (gt_output) {
