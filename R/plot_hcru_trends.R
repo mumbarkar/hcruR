@@ -71,8 +71,8 @@ plot_hcru <- function(
     data = label_df,
     ggplot2::aes(
     x = .data[[x_var]],
-    y = sum_value,
-    label = round(sum_value, 1),
+    y = .data[["sum_value"]],
+    label = round(.data[["sum_value"]], 1),
     group = .data[[cohort_col]]
     ),
     position = ggplot2::position_dodge(width = 0.9),

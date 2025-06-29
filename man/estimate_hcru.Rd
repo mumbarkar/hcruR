@@ -30,56 +30,60 @@ estimate_hcru(
 )
 }
 \arguments{
-\item{data}{A dataframe specifying the health care details}
+\item{data}{A dataframe specifying the health care details.}
 
-\item{cohort_col}{A character specifying the name of the cohort column}
+\item{cohort_col}{A character specifying the name of the cohort column.}
 
 \item{patient_id_col}{A character specifying the name of the patient
-identifier column}
+identifier column.}
 
 \item{admit_col}{A character specifying the name of the date of admission
-column}
+column.}
 
 \item{discharge_col}{A character specifying the name of the date of
-discharge column}
+discharge column.}
 
 \item{index_col}{A character specifying the name of the index date or
-diagnosis column}
+diagnosis column.}
 
 \item{visit_col}{A character specifying the name of the date of
-visit/claim column}
+visit/claim column.}
 
 \item{encounter_id_col}{A character specifying the name of the
-encounter/claim column}
+encounter/claim column.}
 
 \item{setting_col}{A character specifying the name of the HCRU
 setting column e.g. IP, ED, OP, etc.}
 
-\item{cost_col}{A character specifying the name of cost column}
+\item{cost_col}{A character specifying the name of cost column.}
 
-\item{readmission_col}{A character specifying the name of readmission column}
+\item{readmission_col}{A character specifying the name of readmission column.}
 
-\item{time_window_col}{A character specifying the name of time window column}
+\item{time_window_col}{A character specifying the name of time window column.}
 
-\item{los_col}{A character specifying the name of length of stay column}
+\item{los_col}{A character specifying the name of length of stay column.}
 
-\item{custom_var_list}{A character vector provides the list of additional
-columns}
+\item{custom_var_list}{A character vector providing the list of additional
+columns.}
 
-\item{pre_days}{Number of days before index (default 180 days)}
+\item{pre_days}{Number of days before index (default 180 days).}
 
-\item{post_days}{Number of days after index (default 365 days)}
+\item{post_days}{Number of days after index (default 365 days).}
 
 \item{readmission_days_rule}{Rule for how many days can be permissible to
-define readmission criteria in AP setting (default 30 days)}
+define readmission criteria in AP setting (default 30 days).}
+
+\item{group_var_main}{A character specifying the name of the main grouping column.}
+
+\item{group_var_by}{A character specifying the name of the secondary grouping column.}
 
 \item{test}{An optional named list of statistical tests
 (e.g., \code{list(age = "wilcox.test")}).}
 
-\item{gt_output}{Logical; if \code{TRUE}, also returns output formatted
-using \pkg{gtsummary} (default is \code{FALSE}).}
+\item{timeline}{A character specifying the timeline window (default "pre1").}
 
-\item{group_var}{A character specifying the name of grouping column}
+\item{gt_output}{Logical; if \code{TRUE}, also returns output formatted
+using \pkg{gtsummary} (default is \code{TRUE}).}
 }
 \value{
 A list containing one or two summary data frames:
@@ -95,7 +99,7 @@ This function calculates estimates of healthcare resource utilization (HCRU)
 from electronic health record data across various care settings
 (e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
 encounters, costs, length of stay, and readmission rates for pre- and
-post-index periods
+post-index periods.
 }
 \examples{
 \dontrun{

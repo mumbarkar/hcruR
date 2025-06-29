@@ -8,7 +8,9 @@ Imports:
     checkmate,
     dplyr,
     ggplot2,
+    glue,
     gtsummary,
+    purrr,
     rlang
 License: MIT + file LICENSE
 Encoding: UTF-8

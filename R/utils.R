@@ -136,14 +136,22 @@ preproc_hcru_fun <- function(data,
 #' @param data A dataframe with variables to summarize from the output of
 #' the summarize_descriptives function. Kindly filter the data for timeline.
 #' @param var_list Optional quoted variable list (e.g. care_setting).
-#' @param group_var Optional quoted grouping variable (e.g. cohort).
 #' @param test Optional named list of statistical tests
 #' (e.g. age ~ "wilcox.test").
+#' @param patient_id_col A character specifying the name of patient identifier
+#' column.
+#' @param group_var_main A character specifying the name of the main
+#' grouping column.
+#' @param group_var_by A character specifying the name of the secondary
+#' grouping column.
+#' @param timeline A character specifying the timeline window (default "pre1").
 #'
 #' @importFrom gtsummary tbl_summary add_overall add_p modify_header add_n
 #' modify_spanning_header all_continuous all_categorical all_stat_cols
+#' all_of
 #' @import checkmate
 #' @import glue
+#' @import purrr
 #'
 #' @return A gtsummary table object
 #' @export

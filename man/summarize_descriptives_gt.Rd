@@ -18,12 +18,21 @@ summarize_descriptives_gt(
 \item{data}{A dataframe with variables to summarize from the output of
 the summarize_descriptives function. Kindly filter the data for timeline.}
 
+\item{patient_id_col}{A character specifying the name of patient identifier
+column.}
+
 \item{var_list}{Optional quoted variable list (e.g. care_setting).}
+
+\item{group_var_main}{A character specifying the name of the main
+grouping column.}
+
+\item{group_var_by}{A character specifying the name of the secondary
+grouping column.}
 
 \item{test}{Optional named list of statistical tests
 (e.g. age ~ "wilcox.test").}
 
-\item{group_var}{Optional quoted grouping variable (e.g. cohort).}
+\item{timeline}{A character specifying the timeline window (default "pre1").}
 }
 \value{
 A gtsummary table object

@@ -50,6 +50,7 @@ library(hcruR)
 
 # Load sample data
 data(hcru_sample_data)
+data <- hcru_sample_data
 head(hcru_sample_data)
 
 # Estimate HCRU

@@ -4,39 +4,41 @@
 #' from electronic health record data across various care settings
 #' (e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
 #' encounters, costs, length of stay, and readmission rates for pre- and
-#' post-index periods
+#' post-index periods.
 #'
-#' @param data A dataframe specifying the health care details
-#' @param cohort_col A character specifying the name of the cohort column
+#' @param data A dataframe specifying the health care details.
+#' @param cohort_col A character specifying the name of the cohort column.
 #' @param patient_id_col A character specifying the name of the patient
-#' identifier column
+#' identifier column.
 #' @param admit_col A character specifying the name of the date of admission
-#' column
+#' column.
 #' @param discharge_col A character specifying the name of the date of
-#' discharge column
+#' discharge column.
 #' @param index_col A character specifying the name of the index date or
-#' diagnosis column
+#' diagnosis column.
 #' @param visit_col A character specifying the name of the date of
-#' visit/claim column
+#' visit/claim column.
 #' @param encounter_id_col A character specifying the name of the
-#' encounter/claim column
+#' encounter/claim column.
 #' @param setting_col A character specifying the name of the HCRU
 #' setting column e.g. IP, ED, OP, etc.
-#' @param pre_days Number of days before index (default 180 days)
-#' @param post_days Number of days after index (default 365 days)
+#' @param cost_col A character specifying the name of cost column.
+#' @param readmission_col A character specifying the name of readmission column.
+#' @param time_window_col A character specifying the name of time window column.
+#' @param los_col A character specifying the name of length of stay column.
+#' @param custom_var_list A character vector providing the list of additional
+#' columns.
+#' @param pre_days Number of days before index (default 180 days).
+#' @param post_days Number of days after index (default 365 days).
 #' @param readmission_days_rule Rule for how many days can be permissible to
-#' define readmission criteria in AP setting (default 30 days)
-#' @param gt_output Logical; if \code{TRUE}, also returns output formatted
-#' using \pkg{gtsummary} (default is \code{FALSE}).
-#' @param cost_col A character specifying the name of cost column
-#' @param los_col A character specifying the name of length of stay column
-#' @param readmission_col A character specifying the name of readmission column
-#' @param time_window_col A character specifying the name of time window column
-#' @param custom_var_list A character vector provides the list of additional
-#' columns
-#' @param group_var A character specifying the name of grouping column
+#' define readmission criteria in AP setting (default 30 days).
+#' @param group_var_main A character specifying the name of the main grouping column.
+#' @param group_var_by A character specifying the name of the secondary grouping column.
 #' @param test An optional named list of statistical tests
 #' (e.g., \code{list(age = "wilcox.test")}).
+#' @param timeline A character specifying the timeline window (default "pre1").
+#' @param gt_output Logical; if \code{TRUE}, also returns output formatted
+#' using \pkg{gtsummary} (default is \code{TRUE}).
 #'
 #' @importFrom dplyr left_join group_by mutate case_when n filter n_distinct
 #' @importFrom checkmate assert_data_frame assert_character assert_numeric
