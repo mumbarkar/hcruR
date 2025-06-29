@@ -17,22 +17,21 @@
 #' @param cohort_col A character
 #'
 #' @import ggplot2
+#' @importFrom rlang .data
 #'
 #' @return ggplot object
 #' @export
 plot_hcru <- function(
-  summary_df,
-  x_var = "time_window",
-  y_var = "Cost",
-  cohort_col = "cohort",
-  facet_var = "care_setting",
-  facet_var_n = 3,
-  title = "Average total cost by domain and cohort",
-  x_label = "Healthcare Setting (Domain)",
-  y_label = "Average total cost",
-  fill_label = "Cohort"
-) {
-
+    summary_df,
+    x_var = "time_window",
+    y_var = "Cost",
+    cohort_col = "cohort",
+    facet_var = "care_setting",
+    facet_var_n = 3,
+    title = "Average total cost by domain and cohort",
+    x_label = "Healthcare Setting (Domain)",
+    y_label = "Average total cost",
+    fill_label = "Cohort") {
   # Primary input checks
   checkmate::assert_data_frame(summary_df, min.rows = 1)
   checkmate::assert_character(x_var, min.chars = 1)
@@ -47,58 +46,62 @@ plot_hcru <- function(
 
   # Character vector explicitly converted to a factor with levels if present
   if (all(c("pre1", "post1") %in% summary_df[[x_var]])) {
-  summary_df[[x_var]] <- factor(summary_df[[x_var]], levels = c("pre1", "post1"))
+    summary_df[[x_var]] <- factor(summary_df[[x_var]],
+      levels = c("pre1", "post1")
+    )
   } else {
-  summary_df[[x_var]] <- as.factor(summary_df[[x_var]])
+    summary_df[[x_var]] <- as.factor(summary_df[[x_var]])
   }
 
   # Summarise total y values for text labels
   label_df <- summary_df |>
-  dplyr::group_by(.data[[x_var]], .data[[cohort_col]], .data[[facet_var]]) |>
-  dplyr::summarise(sum_value = sum(.data[[y_var]], na.rm = TRUE), .groups = "drop")
+    dplyr::group_by(.data[[x_var]], .data[[cohort_col]], .data[[facet_var]]) |>
+    dplyr::summarise(
+      sum_value = sum(.data[[y_var]], na.rm = TRUE), .groups = "drop")
 
   p <- ggplot2::ggplot(
-  summary_df,
-  ggplot2::aes(
-    x = .data[[x_var]],
-    y = .data[[y_var]],
-    fill = .data[[cohort_col]],
-    group = .data[[cohort_col]]
-  )
-  ) +
-  ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.9)) +
-  ggplot2::geom_text(
-    data = label_df,
+    summary_df,
     ggplot2::aes(
-    x = .data[[x_var]],
-    y = .data[["sum_value"]],
-    label = round(.data[["sum_value"]], 1),
-    group = .data[[cohort_col]]
-    ),
-    position = ggplot2::position_dodge(width = 0.9),
-    vjust = -0.3,
-    size = 3.5,
-    inherit.aes = FALSE
+      x = .data[[x_var]],
+      y = .data[[y_var]],
+      fill = .data[[cohort_col]],
+      group = .data[[cohort_col]]
+    )
   ) +
-  ggplot2::facet_wrap(
-    ~ .data[[facet_var]],
-    strip.position = "top",
-    ncol = facet_var_n
-  ) +
-  ggplot2::labs(
-    title = title,
-    x = x_label,
-    y = y_label,
-    fill = fill_label
-  ) +
-  ggplot2::theme(
-    panel.background = ggplot2::element_blank(),
-    plot.background = ggplot2::element_blank(),
-    strip.background = ggplot2::element_blank(),
-    strip.placement = "outside",
-    strip.text = ggplot2::element_text(face = "bold"),
-    panel.border = ggplot2::element_rect(color = "black", fill = NA, linewidth = 0.8)
-  )
+    ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.9)) +
+    ggplot2::geom_text(
+      data = label_df,
+      ggplot2::aes(
+        x = .data[[x_var]],
+        y = .data[["sum_value"]],
+        label = round(.data[["sum_value"]], 1),
+        group = .data[[cohort_col]]
+      ),
+      position = ggplot2::position_dodge(width = 0.9),
+      vjust = -0.3,
+      size = 3.5,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::facet_wrap(
+      ~ .data[[facet_var]],
+      strip.position = "top",
+      ncol = facet_var_n
+    ) +
+    ggplot2::labs(
+      title = title,
+      x = x_label,
+      y = y_label,
+      fill = fill_label
+    ) +
+    ggplot2::theme(
+      panel.background = ggplot2::element_blank(),
+      plot.background = ggplot2::element_blank(),
+      strip.background = ggplot2::element_blank(),
+      strip.placement = "outside",
+      strip.text = ggplot2::element_text(face = "bold"),
+      panel.border = ggplot2::element_rect(color = "black", fill = NA,
+      linewidth = 0.8)
+    )
 
   return(p)
 }

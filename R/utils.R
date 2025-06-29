@@ -34,17 +34,17 @@
 #'
 #' @examples preproc_hcru_fun(data = hcru_sample_data)
 preproc_hcru_fun <- function(data,
-                            cohort_col = "cohort",
-                            patient_id_col = "patient_id",
-                            admit_col = "admission_date",
-                            discharge_col = "discharge_date",
-                            index_col = "index_date",
-                            visit_col = "visit_date",
-                            encounter_id_col = "encounter_id",
-                            setting_col = "care_setting",
-                            pre_days = 180,
-                            post_days = 365,
-                            readmission_days_rule = 30) {
+                             cohort_col = "cohort",
+                             patient_id_col = "patient_id",
+                             admit_col = "admission_date",
+                             discharge_col = "discharge_date",
+                             index_col = "index_date",
+                             visit_col = "visit_date",
+                             encounter_id_col = "encounter_id",
+                             setting_col = "care_setting",
+                             pre_days = 180,
+                             post_days = 365,
+                             readmission_days_rule = 30) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(cohort_col, min.chars = 1)
@@ -101,7 +101,9 @@ preproc_hcru_fun <- function(data,
   data <- data |>
     dplyr::mutate(
       length_of_stay = as.numeric(
-        .data[[discharge_col]] - .data[[admit_col]]) + 1)
+        .data[[discharge_col]] - .data[[admit_col]]
+      ) + 1
+    )
 
   # Readmission logic (IP only)
   final_data <- data |>
@@ -111,21 +113,24 @@ preproc_hcru_fun <- function(data,
     dplyr::group_by(
       .data[[cohort_col]], .data[[patient_id_col]], .data[[setting_col]]
     ) |>
-    dplyr::mutate(next_admit = dplyr::lead(
-      .data[[admit_col]]
-    ),
-    days_to_next = as.numeric(
-      .data[["next_admit"]] - .data[[discharge_col]]
-    )) |>
+    dplyr::mutate(
+      next_admit = dplyr::lead(
+        .data[[admit_col]]
+      ),
+      days_to_next = as.numeric(
+        .data[["next_admit"]] - .data[[discharge_col]]
+      )
+    ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-    readmission = dplyr::case_when(
-      .data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
-        .data[["days_to_next"]] <= as.numeric(readmission_days_rule) ~ 1,
-      (.data[[setting_col]] == "IP" & is.na(.data[["days_to_next"]])) |
-        (.data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
-           .data[["days_to_next"]] > as.numeric(readmission_days_rule)) ~ 0,
-      TRUE ~ NA_integer_)
+      readmission = dplyr::case_when(
+        .data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
+          .data[["days_to_next"]] <= as.numeric(readmission_days_rule) ~ 1,
+        (.data[[setting_col]] == "IP" & is.na(.data[["days_to_next"]])) |
+          (.data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
+             .data[["days_to_next"]] > as.numeric(readmission_days_rule)) ~ 0,
+        TRUE ~ NA_integer_
+      )
     )
 
   return(final_data)
@@ -160,11 +165,10 @@ summarize_descriptives_gt <- function(
     data,
     patient_id_col,
     var_list = NULL,
-    group_var_main = NULL,  # e.g., "cohort"
-    group_var_by = NULL,    # e.g., "setting"
+    group_var_main = NULL, # e.g., "cohort"
+    group_var_by = NULL, # e.g., "setting"
     test = NULL,
     timeline = "pre1") {
-
   # Basic checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(var_list, null.ok = TRUE)
@@ -206,7 +210,7 @@ summarize_descriptives_gt <- function(
     tbl <- gtsummary::tbl_summary(
       data = df_setting,
       by = !!cohort_sym,
-      include = all_of(vars_this),
+      include = gtsummary::all_of(vars_this),
       missing = "no",
       type = list(all_continuous() ~ "continuous2"),
       statistic = list(
@@ -233,8 +237,6 @@ summarize_descriptives_gt <- function(
       gtsummary::modify_header(update = header_map) |>
       gtsummary::modify_caption(glue::glue("**Summary Table**")) |>
       gtsummary::bold_labels()
-
-    return(tbl)
   })
 
   # Merge all setting-wise cohort tables side-by-side
@@ -275,7 +277,6 @@ summarize_descriptives <- function(data,
                                    los_col = "length_of_stay",
                                    readmission_col = "readmission",
                                    time_window_col = "time_window") {
-
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(patient_id_col, min.chars = 1)
@@ -292,25 +293,29 @@ summarize_descriptives <- function(data,
   # Generate summary
   summary_df <- data |>
     dplyr::group_by(
-     .data[[patient_id_col]], .data[[cohort_col]], .data[[setting_col]],
-     .data[[time_window_col]]) |>
+      .data[[patient_id_col]], .data[[cohort_col]], .data[[setting_col]],
+      .data[[time_window_col]]
+    ) |>
     dplyr::reframe(
       Days = as.numeric(sum(.data[["visit_days"]], na.rm = TRUE)),
-      Month = as.numeric(.data[["Days"]])/30.417,
-      Year = as.numeric(.data[["Days"]])/365.5,
+      Month = as.numeric(.data[["Days"]]) / 30.417,
+      Year = as.numeric(.data[["Days"]]) / 365.5,
       Visits = dplyr::n_distinct(.data[[encounter_id_col]]) |> as.numeric(),
       Cost = sum(.data[[cost_col]], na.rm = TRUE),
       LOS = dplyr::if_else(.data[[setting_col]] == "IP",
-                               sum(.data[[los_col]], na.rm = TRUE),
-                               NA_real_),
+        sum(.data[[los_col]], na.rm = TRUE),
+        NA_real_
+      ),
       Readmit_cnt = dplyr::if_else(.data[[setting_col]] == "IP",
-                                        sum(.data[[readmission_col]],
-                                                   na.rm = TRUE),
-                                        NA_real_),
-      Visit_PPPM = .data[["Visits"]]/.data[["Month"]],
-      Visit_PPPY = .data[["Visits"]]/.data[["Year"]],
-      Cost_PPPM = .data[["Cost"]]/.data[["Month"]],
-      Cost_PPPY = .data[["Cost"]]/.data[["Year"]]
+        sum(.data[[readmission_col]],
+          na.rm = TRUE
+        ),
+        NA_real_
+      ),
+      Visit_PPPM = .data[["Visits"]] / .data[["Month"]],
+      Visit_PPPY = .data[["Visits"]] / .data[["Year"]],
+      Cost_PPPM = .data[["Cost"]] / .data[["Month"]],
+      Cost_PPPY = .data[["Cost"]] / .data[["Year"]]
     ) |>
     dplyr::ungroup() |>
     dplyr::distinct()

@@ -43,7 +43,7 @@ test_that("preproc_hcru_fun filters out encounters outside pre/post window", {
   )
 
   result <- preproc_hcru_fun(data)
-  expect_equal(nrow(result), 0)  # Out of pre1 and post1 windows
+  expect_equal(nrow(result), 0) # Out of pre1 and post1 windows
 })
 
 test_that("preproc_hcru_fun assigns visit_days and period correctly", {
@@ -206,8 +206,12 @@ test_that("fails with invalid inputs", {
 })
 
 test_that("summarize_descriptives throws error for invalid input types", {
-  expect_error(summarize_descriptives("not a dataframe"),
-               "Assertion on 'data' failed")
-  expect_error(summarize_descriptives(data.frame(x = 1), patient_id_col = 123),
-               "Assertion on 'patient_id_col' failed")
+  expect_error(
+    summarize_descriptives("not a dataframe"),
+    "Assertion on 'data' failed"
+  )
+  expect_error(
+    summarize_descriptives(data.frame(x = 1), patient_id_col = 123),
+    "Assertion on 'patient_id_col' failed"
+  )
 })

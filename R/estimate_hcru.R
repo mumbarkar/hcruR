@@ -23,8 +23,10 @@
 #' @param setting_col A character specifying the name of the HCRU
 #' setting column e.g. IP, ED, OP, etc.
 #' @param cost_col A character specifying the name of cost column.
-#' @param readmission_col A character specifying the name of readmission column.
-#' @param time_window_col A character specifying the name of time window column.
+#' @param readmission_col A character specifying the name of readmission
+#' column.
+#' @param time_window_col A character specifying the name of time window
+#' column.
 #' @param los_col A character specifying the name of length of stay column.
 #' @param custom_var_list A character vector providing the list of additional
 #' columns.
@@ -32,8 +34,10 @@
 #' @param post_days Number of days after index (default 365 days).
 #' @param readmission_days_rule Rule for how many days can be permissible to
 #' define readmission criteria in AP setting (default 30 days).
-#' @param group_var_main A character specifying the name of the main grouping column.
-#' @param group_var_by A character specifying the name of the secondary grouping column.
+#' @param group_var_main A character specifying the name of the main
+#' grouping column.
+#' @param group_var_by A character specifying the name of the secondary
+#' grouping column.
 #' @param test An optional named list of statistical tests
 #' (e.g., \code{list(age = "wilcox.test")}).
 #' @param timeline A character specifying the timeline window (default "pre1").
@@ -110,44 +114,53 @@ estimate_hcru <- function(data,
 
   # Pre-process HCRU data
   hcru_data <- data |>
-    preproc_hcru_fun(cohort_col,
-                     patient_id_col,
-                     admit_col,
-                     discharge_col,
-                     index_col,
-                     visit_col,
-                     encounter_id_col,
-                     setting_col,
-                     pre_days,
-                     post_days,
-                     readmission_days_rule)
+    preproc_hcru_fun(
+      cohort_col,
+      patient_id_col,
+      admit_col,
+      discharge_col,
+      index_col,
+      visit_col,
+      encounter_id_col,
+      setting_col,
+      pre_days,
+      post_days,
+      readmission_days_rule
+    )
 
   # Summarize by settings using dplyr
   summary1 <- hcru_data |>
     summarize_descriptives(patient_id_col,
-                           setting_col,
-                           cohort_col,
-                           encounter_id_col,
-                           cost_col,
-                           los_col,
-                           readmission_col,
-                           time_window_col = "time_window")
+      setting_col,
+      cohort_col,
+      encounter_id_col,
+      cost_col,
+      los_col,
+      readmission_col,
+      time_window_col = "time_window"
+    )
 
   # Summarize by settings using gtsummary
-  var_list <- c("Visits", "Cost", "LOS", "Readmit_cnt", "Visit_PPPM",
-                "Visit_PPPY", "Cost_PPPM", "Cost_PPPY")
+  var_list <- c(
+    "Visits", "Cost", "LOS", "Readmit_cnt", "Visit_PPPM",
+    "Visit_PPPY", "Cost_PPPM", "Cost_PPPY"
+  )
   summary2 <- summary1 |>
-    summarize_descriptives_gt(patient_id_col = patient_id_col,
-                              var_list = var_list,
-                              group_var_main = group_var_main,
-                              group_var_by = group_var_by,
-                              test = test,
-                              timeline = timeline)
+    summarize_descriptives_gt(
+      patient_id_col = patient_id_col,
+      var_list = var_list,
+      group_var_main = group_var_main,
+      group_var_by = group_var_by,
+      test = test,
+      timeline = timeline
+    )
 
   # Save output in the list object
   if (gt_output) {
-    final_output <- list("Summary by settings using dplyr" = summary1,
-                         "Summary by settings using gtsummary" = summary2)
+    final_output <- list(
+      "Summary by settings using dplyr" = summary1,
+      "Summary by settings using gtsummary" = summary2
+    )
   } else {
     final_output <- list("Summary by settings using dplyr" = summary1)
   }
