@@ -13,7 +13,7 @@ summarize_descriptives(
   cost_col = "cost_usd",
   los_col = "length_of_stay",
   readmission_col = "readmission",
-  time_window_col = "period"
+  time_window_col = "time_window"
 )
 }
 \arguments{

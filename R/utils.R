@@ -34,17 +34,17 @@
 #'
 #' @examples preproc_hcru_fun(data = hcru_sample_data)
 preproc_hcru_fun <- function(data,
-                            cohort_col = "cohort",
-                            patient_id_col = "patient_id",
-                            admit_col = "admission_date",
-                            discharge_col = "discharge_date",
-                            index_col = "index_date",
-                            visit_col = "visit_date",
-                            encounter_id_col = "encounter_id",
-                            setting_col = "care_setting",
-                            pre_days = 180,
-                            post_days = 365,
-                            readmission_days_rule = 30) {
+                             cohort_col = "cohort",
+                             patient_id_col = "patient_id",
+                             admit_col = "admission_date",
+                             discharge_col = "discharge_date",
+                             index_col = "index_date",
+                             visit_col = "visit_date",
+                             encounter_id_col = "encounter_id",
+                             setting_col = "care_setting",
+                             pre_days = 180,
+                             post_days = 365,
+                             readmission_days_rule = 30) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(cohort_col, min.chars = 1)
@@ -101,7 +101,9 @@ preproc_hcru_fun <- function(data,
   data <- data |>
     dplyr::mutate(
       length_of_stay = as.numeric(
-        .data[[discharge_col]] - .data[[admit_col]]) + 1)
+        .data[[discharge_col]] - .data[[admit_col]]
+      ) + 1
+    )
 
   # Readmission logic (IP only)
   final_data <- data |>
@@ -111,69 +113,109 @@ preproc_hcru_fun <- function(data,
     dplyr::group_by(
       .data[[cohort_col]], .data[[patient_id_col]], .data[[setting_col]]
     ) |>
-    dplyr::mutate(next_admit = dplyr::lead(
-      .data[[admit_col]]
-    ),
-    days_to_next = as.numeric(
-      .data[["next_admit"]] - .data[[discharge_col]]
-    ),
-    readmission = ifelse(
-      .data[[setting_col]] == "IP" &
-        !is.na(.data[["days_to_next"]]) &
-        .data[["days_to_next"]] <=
-        as.numeric(readmission_days_rule), 1, 0)
+    dplyr::mutate(
+      next_admit = dplyr::lead(
+        .data[[admit_col]]
+      ),
+      days_to_next = as.numeric(
+        .data[["next_admit"]] - .data[[discharge_col]]
+      )
     ) |>
-    dplyr::ungroup()
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      readmission = dplyr::case_when(
+        .data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
+          .data[["days_to_next"]] <= as.numeric(readmission_days_rule) ~ 1,
+        (.data[[setting_col]] == "IP" & is.na(.data[["days_to_next"]])) |
+          (.data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
+             .data[["days_to_next"]] > as.numeric(readmission_days_rule)) ~ 0,
+        TRUE ~ NA_integer_
+      )
+    )
 
   return(final_data)
 }
 
 #' Generate Detailed Descriptive Statistics with Custom P-Value Tests
 #'
-#' @param data A dataframe with variables to summarize.
+#' @param data A dataframe with variables to summarize from the output of
+#' the summarize_descriptives function. Kindly filter the data for timeline.
 #' @param var_list Optional quoted variable list (e.g. care_setting).
-#' @param group_var Optional quoted grouping variable (e.g. cohort).
 #' @param test Optional named list of statistical tests
 #' (e.g. age ~ "wilcox.test").
+#' @param patient_id_col A character specifying the name of patient identifier
+#' column.
+#' @param group_var_main A character specifying the name of the main
+#' grouping column.
+#' @param group_var_by A character specifying the name of the secondary
+#' grouping column.
+#' @param timeline A character specifying the timeline window (default "pre1").
 #'
 #' @importFrom gtsummary tbl_summary add_overall add_p modify_header add_n
 #' modify_spanning_header all_continuous all_categorical all_stat_cols
+#' all_of
 #' @import checkmate
+#' @import glue
+#' @import purrr
 #'
 #' @return A gtsummary table object
 #' @export
 #'
-summarize_descriptives_gt <- function(data,
-                                             var_list = NULL,
-                                             group_var = NULL,
-                                             test = NULL
-) {
-  # Primary input checks
+summarize_descriptives_gt <- function(
+    data,
+    patient_id_col,
+    var_list = NULL,
+    group_var_main = NULL, # e.g., "cohort"
+    group_var_by = NULL, # e.g., "setting"
+    test = NULL,
+    timeline = "pre1") {
+  # Basic checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(var_list, null.ok = TRUE)
-  checkmate::assert_character(group_var, null.ok = TRUE)
+  checkmate::assert_character(group_var_main, len = 1)
+  checkmate::assert_character(group_var_by, len = 1)
   checkmate::assert_list(test, null.ok = TRUE)
 
-  # Define custom stats for continuous & categorical variables
-  stat_list <- list(
-    all_continuous() ~ c(
-      "Mean (SD)" = "{mean} ({sd})",
-      "Median (IQR)" = "{median} ({p25}, {p75})",
-      "Q1" = "{p25}",
-      "Q3" = "{p75}",
-      "Range" = "{min} - {max}"
-    )
-  )
+  # Filter the data as per the timeline
+  data <- data |>
+    dplyr::filter(.data[["time_window"]] == timeline)
 
-  if (!is.null(group_var)) {
+  # Unique settings (IP, OP, ED...)
+  settings <- unique(data[[group_var_by]])
+
+  # Iterate by setting
+  setting_tbls <- purrr::map(settings, function(setting) {
+    df_setting <- dplyr::filter(data, .data[[group_var_by]] == setting)
+
+    # Drop IP-only vars if not IP
+    vars_this <- var_list
+    if (setting != "IP") {
+      vars_this <- setdiff(vars_this, c("LOS", "Readmit_cnt"))
+    }
+
+    # Cohort group (control, treatment, etc.)
+    cohort_sym <- rlang::sym(group_var_main)
+
+    # Get N per group
+    n_df <- df_setting |>
+      dplyr::distinct(.data[[patient_id_col]], .data[[group_var_main]]) |>
+      dplyr::count(.data[[group_var_main]], name = "n") |>
+      dplyr::mutate(
+        colname = paste0("stat_", dplyr::row_number()),
+        header = glue::glue("{.data[[group_var_main]]}, N = {n}")
+      )
+    header_map <- stats::setNames(n_df$header, n_df$colname)
+
+    # Build summary
     tbl <- gtsummary::tbl_summary(
-      data = data,
-      by = {{ group_var }},
-      type = all_continuous() ~ "continuous2",
-      include = {{ var_list }},
-      missing = "ifany",
+      data = df_setting,
+      by = !!cohort_sym,
+      include = gtsummary::all_of(vars_this),
+      missing = "no",
+      type = list(all_continuous() ~ "continuous2"),
       statistic = list(
         all_continuous() ~ c(
+          "Total" = "{sum}",
           "Mean (SD)" = "{mean} ({sd})",
           "Median (IQR)" = "{median} ({p25}, {p75})",
           "Q1" = "{p25}",
@@ -181,35 +223,29 @@ summarize_descriptives_gt <- function(data,
           "Range" = "{min} - {max}"
         )
       )
-    ) |>
-      gtsummary::add_n() |>
-      gtsummary::add_overall()
+    )
 
-    if (!is.null(test)) {
-      tbl <- tbl |> gtsummary::add_p(test = test)
-    } else {
-      tbl <- tbl |> gtsummary::add_p()
+    if (length(unique(df_setting[[group_var_main]])) > 1) {
+      tbl <- if (!is.null(test)) {
+        tbl |> gtsummary::add_p(test = test)
+      } else {
+        tbl |> gtsummary::add_p()
+      }
     }
 
     tbl <- tbl |>
-      gtsummary::modify_header(label = "**Variable**") |>
-      gtsummary::modify_spanning_header(gtsummary::all_stat_cols() ~ "**Group**") |>
-      # Apply bold styling to variable labels
+      gtsummary::modify_header(update = header_map) |>
+      gtsummary::modify_caption(glue::glue("**Summary Table**")) |>
       gtsummary::bold_labels()
-  } else {
-    tbl <- gtsummary::tbl_summary(
-      data = data,
-      missing = "ifany",
-      statistic = stat_list
-    ) |>
-      gtsummary::add_n() |>
-      gtsummary::modify_header(label = "**Variable**") |>
-      # Apply bold styling to variable labels
-      gtsummary::bold_labels()
-  }
+  })
 
-  return(tbl)
+  # Merge all setting-wise cohort tables side-by-side
+  gtsummary::tbl_merge(
+    tbls = setting_tbls,
+    tab_spanner = settings
+  )
 }
+
 
 #' Generate Detailed Descriptive Statistics
 #'
@@ -240,8 +276,7 @@ summarize_descriptives <- function(data,
                                    cost_col = "cost_usd",
                                    los_col = "length_of_stay",
                                    readmission_col = "readmission",
-                                   time_window_col = "period") {
-
+                                   time_window_col = "time_window") {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(patient_id_col, min.chars = 1)
@@ -258,21 +293,29 @@ summarize_descriptives <- function(data,
   # Generate summary
   summary_df <- data |>
     dplyr::group_by(
-      .data[[cohort_col]], .data[[setting_col]], .data[[time_window_col]]) |>
+      .data[[patient_id_col]], .data[[cohort_col]], .data[[setting_col]],
+      .data[[time_window_col]]
+    ) |>
     dplyr::reframe(
-      Patients = dplyr::n_distinct(.data[[patient_id_col]]),
-      Visits = dplyr::n_distinct(.data[[encounter_id_col]]),
+      Days = as.numeric(sum(.data[["visit_days"]], na.rm = TRUE)),
+      Month = as.numeric(.data[["Days"]]) / 30.417,
+      Year = as.numeric(.data[["Days"]]) / 365.5,
+      Visits = dplyr::n_distinct(.data[[encounter_id_col]]) |> as.numeric(),
       Cost = sum(.data[[cost_col]], na.rm = TRUE),
-      Avg_visits_per_patient = round(.data[["Visits"]] / .data[["Patients"]],
-                                     2),
-      Avg_cost_per_patient = round(.data[["Cost"]] / .data[["Patients"]], 2),
-      Avg_LOS = dplyr::if_else(.data[[setting_col]] == "IP",
-                               round(mean(.data[[los_col]], na.rm = TRUE), 2),
-                               NA_real_),
-      Readmit_30d_Rate = dplyr::if_else(.data[[setting_col]] == "IP",
-                                        round(mean(.data[[readmission_col]],
-                                                   na.rm = TRUE) * 100, 2),
-                                        NA_real_)
+      LOS = dplyr::if_else(.data[[setting_col]] == "IP",
+        sum(.data[[los_col]], na.rm = TRUE),
+        NA_real_
+      ),
+      Readmit_cnt = dplyr::if_else(.data[[setting_col]] == "IP",
+        sum(.data[[readmission_col]],
+          na.rm = TRUE
+        ),
+        NA_real_
+      ),
+      Visit_PPPM = .data[["Visits"]] / .data[["Month"]],
+      Visit_PPPY = .data[["Visits"]] / .data[["Year"]],
+      Cost_PPPM = .data[["Cost"]] / .data[["Month"]],
+      Cost_PPPY = .data[["Cost"]] / .data[["Year"]]
     ) |>
     dplyr::ungroup() |>
     dplyr::distinct()

@@ -4,17 +4,35 @@
 \alias{summarize_descriptives_gt}
 \title{Generate Detailed Descriptive Statistics with Custom P-Value Tests}
 \usage{
-summarize_descriptives_gt(data, var_list = NULL, group_var = NULL, test = NULL)
+summarize_descriptives_gt(
+  data,
+  patient_id_col,
+  var_list = NULL,
+  group_var_main = NULL,
+  group_var_by = NULL,
+  test = NULL,
+  timeline = "pre1"
+)
 }
 \arguments{
-\item{data}{A dataframe with variables to summarize.}
+\item{data}{A dataframe with variables to summarize from the output of
+the summarize_descriptives function. Kindly filter the data for timeline.}
+
+\item{patient_id_col}{A character specifying the name of patient identifier
+column.}
 
 \item{var_list}{Optional quoted variable list (e.g. care_setting).}
 
-\item{group_var}{Optional quoted grouping variable (e.g. cohort).}
+\item{group_var_main}{A character specifying the name of the main
+grouping column.}
+
+\item{group_var_by}{A character specifying the name of the secondary
+grouping column.}
 
 \item{test}{Optional named list of statistical tests
 (e.g. age ~ "wilcox.test").}
+
+\item{timeline}{A character specifying the timeline window (default "pre1").}
 }
 \value{
 A gtsummary table object

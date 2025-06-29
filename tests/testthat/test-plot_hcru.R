@@ -1,35 +1,33 @@
 library(testthat)
 library(ggplot2)
-library(checkmate)
+library(dplyr)
 
-test_that("plot_hcru returns a ggplot object", {
-  sample_df <- data.frame(
-    cohort = rep(c("A", "B"), each = 2),
-    period = rep(c("pre", "post"), 2),
-    Cost = c(100, 200, 150, 300),
-    care_setting = rep(c("IP", "OP"), each = 2)
-  )
+# Sample summarized data
+mock_summary_df <- tibble::tibble(
+  time_window = rep(c("pre1", "post1"), each = 4),
+  Cost = c(100, 150, 200, 180, 110, 160, 190, 170),
+  cohort = rep(c("Control", "Treatment"), times = 4),
+  care_setting = rep(c("IP", "OP"), times = 4)
+)
 
-  p <- plot_hcru(summary_df = sample_df)
+test_that("returns a ggplot object", {
+  p <- plot_hcru(mock_summary_df)
   expect_s3_class(p, "ggplot")
 })
 
-test_that("plot_hcru handles custom labels and layout", {
-  sample_df <- data.frame(
-    cohort = rep(c("A", "B"), each = 2),
-    period = rep(c("pre", "post"), 2),
-    Cost = c(100, 200, 150, 300),
-    care_setting = rep(c("IP", "OP"), each = 2)
-  )
+test_that("plot contains correct labels and facets", {
+  p <- plot_hcru(mock_summary_df, title = "Test Title", x_label = "Time", y_label = "Cost", fill_label = "Group")
+  built <- ggplot_build(p)
+  expect_true("Test Title" %in% p$labels$title)
+  expect_true("Time" %in% p$labels$x)
+  expect_true("Cost" %in% p$labels$y)
+  expect_true("Group" %in% p$labels$fill)
+  expect_equal(length(unique(mock_summary_df$care_setting)), length(built$layout$layout$PANEL))
+})
 
-  p <- plot_hcru(
-    summary_df = sample_df,
-    title = "Custom Title",
-    x_lable = "X Axis",
-    y_lable = "Y Axis",
-    fill_lable = "Cohort Group",
-    facet_var_n = 1
-  )
-
+test_that("works with non-standard time_window values", {
+  df <- mock_summary_df
+  df$time_window <- rep(c("baseline", "followup"), each = 4)
+  p <- plot_hcru(df)
   expect_s3_class(p, "ggplot")
 })
