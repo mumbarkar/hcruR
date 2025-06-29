@@ -22,9 +22,11 @@ estimate_hcru(
   pre_days = 180,
   post_days = 365,
   readmission_days_rule = 30,
-  group_var = "cohort",
+  group_var_main = "cohort",
+  group_var_by = "care_setting",
   test = NULL,
-  gt_output = FALSE
+  timeline = "pre1",
+  gt_output = TRUE
 )
 }
 \arguments{
@@ -71,13 +73,13 @@ columns}
 \item{readmission_days_rule}{Rule for how many days can be permissible to
 define readmission criteria in AP setting (default 30 days)}
 
-\item{group_var}{A character specifying the name of grouping column}
-
 \item{test}{An optional named list of statistical tests
 (e.g., \code{list(age = "wilcox.test")}).}
 
 \item{gt_output}{Logical; if \code{TRUE}, also returns output formatted
 using \pkg{gtsummary} (default is \code{FALSE}).}
+
+\item{group_var}{A character specifying the name of grouping column}
 }
 \value{
 A list containing one or two summary data frames:

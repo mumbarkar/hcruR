@@ -6,15 +6,15 @@
 \usage{
 plot_hcru(
   summary_df,
-  x_var = "period",
+  x_var = "time_window",
   y_var = "Cost",
   cohort_col = "cohort",
   facet_var = "care_setting",
   facet_var_n = 3,
   title = "Average total cost by domain and cohort",
-  x_lable = "Healthcare Setting (Domain)",
-  y_lable = "Average total cost",
-  fill_lable = "Cohort"
+  x_label = "Healthcare Setting (Domain)",
+  y_label = "Average total cost",
+  fill_label = "Cohort"
 )
 }
 \arguments{
@@ -29,22 +29,21 @@ plot_hcru(
 \item{facet_var}{A character specifying column name to generate the plot
 output in columns}
 
-\item{facet_var_n}{A character specifying column name to generate the plot
-output in n number of columns}
+\item{facet_var_n}{A numeric specifying number of columns for facet output}
 
 \item{title}{A character}
 
-\item{x_lable}{A character}
+\item{x_label}{A character}
 
-\item{y_lable}{A character}
+\item{y_label}{A character}
 
-\item{fill_lable}{A character}
+\item{fill_label}{A character}
 }
 \value{
 ggplot object
 }
 \description{
-This function provide the visualization of the events of the settings/domains
+This function provides the visualization of the events of the settings
 grouped by cohort and time window.
 }
 \details{
