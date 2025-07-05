@@ -89,8 +89,10 @@ plot_hcru <- function(
       strip.background = ggplot2::element_blank(),
       strip.placement = "outside",
       strip.text = ggplot2::element_text(face = "bold"),
-      panel.border = ggplot2::element_rect(color = "black", fill = NA,
-      linewidth = 0.8)
+      panel.border = ggplot2::element_rect(
+        color = "black", fill = NA,
+        linewidth = 0.8
+      )
     )
 
   return(p)

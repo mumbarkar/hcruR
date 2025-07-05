@@ -128,7 +128,7 @@ preproc_hcru_fun <- function(data,
           .data[["days_to_next"]] <= as.numeric(readmission_days_rule) ~ 1,
         (.data[[setting_col]] == "IP" & is.na(.data[["days_to_next"]])) |
           (.data[[setting_col]] == "IP" & !is.na(.data[["days_to_next"]]) &
-             .data[["days_to_next"]] > as.numeric(readmission_days_rule)) ~ 0,
+            .data[["days_to_next"]] > as.numeric(readmission_days_rule)) ~ 0,
         TRUE ~ NA_integer_
       )
     )
