@@ -1,6 +1,7 @@
 library(testthat)
 library(ggplot2)
 library(dplyr)
+library(hcruR)
 
 # Sample summarized data
 mock_summary_df <- tibble::tibble(

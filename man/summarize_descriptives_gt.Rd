@@ -11,7 +11,7 @@ summarize_descriptives_gt(
   group_var_main = NULL,
   group_var_by = NULL,
   test = NULL,
-  timeline = "pre1"
+  timeline = "Pre"
 )
 }
 \arguments{
@@ -32,7 +32,7 @@ grouping column.}
 \item{test}{Optional named list of statistical tests
 (e.g. age ~ "wilcox.test").}
 
-\item{timeline}{A character specifying the timeline window (default "pre1").}
+\item{timeline}{A character specifying the timeline window (default "Pre").}
 }
 \value{
 A gtsummary table object

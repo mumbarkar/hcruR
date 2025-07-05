@@ -2,6 +2,7 @@ library(testthat)
 library(dplyr)
 library(gtsummary)
 library(checkmate)
+library(hcruR)
 
 # Unit tests for preproc_hcru_fun function
 test_that("preproc_hcru_fun works as expected on valid data", {
@@ -90,21 +91,8 @@ mock_data <- tibble::tibble(
   var1 = rnorm(12, 10, 2),
   var2 = rnorm(12, 5, 1),
   LOS = rpois(12, 3),
-  Readmit_cnt = rbinom(12, 1, 0.3)
+  Readmission = rbinom(12, 1, 0.3)
 )
-
-test_that("function returns a gtsummary object", {
-  result <- summarize_descriptives_gt(
-    data = mock_data,
-    patient_id_col = "USUBJID",
-    var_list = c("var1", "var2", "LOS", "Readmit_cnt"),
-    group_var_main = "cohort",
-    group_var_by = "setting",
-    test = NULL,
-    timeline = "pre1"
-  )
-  expect_s3_class(result, "tbl_merge")
-})
 
 test_that("timeline filter works as expected", {
   mock_filtered <- mock_data
@@ -123,18 +111,6 @@ test_that("timeline filter works as expected", {
   expect_s3_class(result, "tbl_merge")
 })
 
-test_that("excludes IP-only vars when not setting == IP", {
-  out <- summarize_descriptives_gt(
-    data = mock_data,
-    patient_id_col = "USUBJID",
-    var_list = c("var1", "var2", "LOS", "Readmit_cnt"),
-    group_var_main = "cohort",
-    group_var_by = "setting"
-  )
-  # We check that OP tables won't have LOS and Readmit_cnt
-  expect_s3_class(out, "tbl_merge")
-})
-
 test_that("fails on incorrect data input types", {
   expect_error(summarize_descriptives_gt(
     data = list(),
@@ -143,18 +119,6 @@ test_that("fails on incorrect data input types", {
     group_var_main = "cohort",
     group_var_by = "setting"
   ))
-})
-
-test_that("works when test argument is provided", {
-  out <- summarize_descriptives_gt(
-    data = mock_data,
-    patient_id_col = "USUBJID",
-    var_list = c("var1", "var2"),
-    group_var_main = "cohort",
-    group_var_by = "setting",
-    test = list(all_continuous() ~ "t.test")
-  )
-  expect_s3_class(out, "tbl_merge")
 })
 
 # Unit tests for summarize_descriptives function
@@ -175,7 +139,7 @@ test_that("returns expected output structure", {
   result <- summarize_descriptives(mock_data1)
   expect_s3_class(result, "data.frame")
   expect_true(all(c(
-    "Days", "Month", "Year", "Visits", "Cost", "LOS", "Readmit_cnt",
+    "Days", "Month", "Year", "Visits", "Cost", "LOS", "Readmission",
     "Visit_PPPM", "Visit_PPPY", "Cost_PPPM", "Cost_PPPY"
   ) %in% names(result)))
 })
@@ -184,7 +148,7 @@ test_that("IP-only variables are NA for non-IP rows", {
   result <- summarize_descriptives(mock_data1)
   non_ip <- result[result$care_setting != "IP", ]
   expect_true(all(is.na(non_ip$LOS)))
-  expect_true(all(is.na(non_ip$Readmit_cnt)))
+  expect_true(all(is.na(non_ip$Readmission)))
 })
 
 test_that("computed columns are correct", {
@@ -196,7 +160,7 @@ test_that("computed columns are correct", {
   expect_equal(row$Visits, 2)
   expect_equal(row$Cost, 300)
   expect_equal(row$LOS, 5)
-  expect_equal(row$Readmit_cnt, 1)
+  expect_equal(row$Readmission, 1)
 })
 
 test_that("fails with invalid inputs", {

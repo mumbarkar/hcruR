@@ -89,27 +89,27 @@ plots)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-d
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Step 1: Estimate HCRU</span></span>
 <span><span class="va">hcru_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_hcru.html">estimate_hcru</a></span><span class="op">(</span><span class="va">data</span>,</span>
-<span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>  patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
-<span>  admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
-<span>  discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
-<span>  index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
-<span>  visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
-<span>  encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
-<span>  setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>  cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
-<span>  readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
-<span>  time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
-<span>  los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
-<span>  custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
-<span>  post_days <span class="op">=</span> <span class="fl">365</span>,</span>
-<span>  readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>  group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>  test <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  timeline <span class="op">=</span> <span class="st">"pre1"</span>,</span>
-<span>  gt_output <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>                              cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>                              patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
+<span>                              admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
+<span>                              discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
+<span>                              index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
+<span>                              visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
+<span>                              encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
+<span>                              setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>                              cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
+<span>                              readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
+<span>                              time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
+<span>                              los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
+<span>                              custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                              pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                              post_days <span class="op">=</span> <span class="fl">365</span>,</span>
+<span>                              readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>                              group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>                              group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>                              test <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                              timeline <span class="op">=</span> <span class="st">"Pre"</span>,</span>
+<span>                              gt_output <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: The `update` argument of `modify_header()` is deprecated as of gtsummary 2.0.0.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `modify_header(...)` input instead. Dynamic dots allow for syntax like</span></span>
@@ -125,18 +125,18 @@ plots)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-d
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 757 × 15</span></span></span>
 <span><span class="co">#&gt;    patient_id cohort  care_setting time_window  Days  Month   Year Visits   Cost</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P_1001     control ED           post1         319 10.5   0.873       2  <span style="text-decoration: underline;">4</span>677.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P_1001     control ED           pre1           18  0.592 0.049<span style="text-decoration: underline;">2</span>      1  <span style="text-decoration: underline;">1</span>871.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P_1001     control IP           post1          21  0.690 0.057<span style="text-decoration: underline;">5</span>      1 <span style="text-decoration: underline;">23</span>591.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P_1001     control IP           pre1           22  0.723 0.060<span style="text-decoration: underline;">2</span>      1 <span style="text-decoration: underline;">23</span>142.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P_1001     control OP           post1          13  0.427 0.035<span style="text-decoration: underline;">6</span>      1   699.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P_1002     treatm… ED           post1         271  8.91  0.741       2  <span style="text-decoration: underline;">3</span>088.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P_1002     treatm… ED           pre1          153  5.03  0.419       1  <span style="text-decoration: underline;">1</span>869.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P_1002     treatm… IP           post1         270  8.88  0.739       3 <span style="text-decoration: underline;">42</span>218.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P_1002     treatm… OP           pre1          195  6.41  0.534       2  <span style="text-decoration: underline;">1</span>910.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P_1003     treatm… ED           post1          59  1.94  0.161       1  <span style="text-decoration: underline;">4</span>895.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P_1001     control ED           Post          319 10.5   0.873       2  <span style="text-decoration: underline;">4</span>677.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P_1001     control ED           Pre            18  0.592 0.049<span style="text-decoration: underline;">2</span>      1  <span style="text-decoration: underline;">1</span>871.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P_1001     control IP           Post           21  0.690 0.057<span style="text-decoration: underline;">5</span>      1 <span style="text-decoration: underline;">23</span>591.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P_1001     control IP           Pre            22  0.723 0.060<span style="text-decoration: underline;">2</span>      1 <span style="text-decoration: underline;">23</span>142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P_1001     control OP           Post           13  0.427 0.035<span style="text-decoration: underline;">6</span>      1   699.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P_1002     treatm… ED           Post          271  8.91  0.741       2  <span style="text-decoration: underline;">3</span>088.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P_1002     treatm… ED           Pre           153  5.03  0.419       1  <span style="text-decoration: underline;">1</span>869.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P_1002     treatm… IP           Post          270  8.88  0.739       3 <span style="text-decoration: underline;">42</span>218.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P_1002     treatm… OP           Pre           195  6.41  0.534       2  <span style="text-decoration: underline;">1</span>910.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P_1003     treatm… ED           Post           59  1.94  0.161       1  <span style="text-decoration: underline;">4</span>895.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 747 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: LOS &lt;dbl&gt;, Readmit_cnt &lt;dbl&gt;, Visit_PPPM &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: LOS &lt;dbl&gt;, Readmission &lt;dbl&gt;, Visit_PPPM &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Visit_PPPY &lt;dbl&gt;, Cost_PPPM &lt;dbl&gt;, Cost_PPPY &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -146,27 +146,27 @@ output)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Step 1: Estimate HCRU</span></span>
 <span><span class="va">hcru_summary_gt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_hcru.html">estimate_hcru</a></span><span class="op">(</span><span class="va">data</span>,</span>
-<span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>  patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
-<span>  admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
-<span>  discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
-<span>  index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
-<span>  visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
-<span>  encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
-<span>  setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>  cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
-<span>  readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
-<span>  time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
-<span>  los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
-<span>  custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
-<span>  post_days <span class="op">=</span> <span class="fl">365</span>,</span>
-<span>  readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>  group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>  test <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  timeline <span class="op">=</span> <span class="st">"pre1"</span>,</span>
-<span>  gt_output <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>                                 cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>                                 patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
+<span>                                 admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
+<span>                                 discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
+<span>                                 index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
+<span>                                 visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
+<span>                                 encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
+<span>                                 setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>                                 cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
+<span>                                 readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
+<span>                                 time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
+<span>                                 los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
+<span>                                 custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                                 pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>                                 post_days <span class="op">=</span> <span class="fl">365</span>,</span>
+<span>                                 readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>                                 group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>                                 group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>                                 test <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                                 timeline <span class="op">=</span> <span class="st">"Pre"</span>,</span>
+<span>                                 gt_output <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">hcru_summary_gt</span><span class="op">$</span><span class="va">`Summary by settings using gtsummary`</span></span></code></pre></div>
@@ -1218,7 +1218,7 @@ output)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-
 <td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Readmit_cnt</td>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Readmission</td>
 <td headers="stat_1_1" class="gt_row gt_center"><br></td>
 <td headers="stat_2_1" class="gt_row gt_center"><br></td>
 <td headers="p.value_1" class="gt_row gt_center"><br></td>
@@ -1256,19 +1256,29 @@ output)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-
 </div>
 </div>
 <div class="section level3">
-<h3 id="generate-the-hcru-plot-total-visits-by-cohort-and-time-line">Generate the HCRU plot: total visits by cohort and time-line<a class="anchor" aria-label="anchor" href="#generate-the-hcru-plot-total-visits-by-cohort-and-time-line"></a>
+<h3 id="generate-the-hcru-plot-average-visits-by-cohort-and-time-line">Generate the HCRU plot: average visits by cohort and time-line<a class="anchor" aria-label="anchor" href="#generate-the-hcru-plot-average-visits-by-cohort-and-time-line"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span></span>
-<span>  summary_df <span class="op">=</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Calculate the average visits</span></span>
+<span><span class="va">sum_df1</span> <span class="op">&lt;-</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span></span>
+<span>      <span class="va">.data</span><span class="op">[[</span><span class="st">"time_window"</span><span class="op">]</span><span class="op">]</span>, </span>
+<span>      <span class="va">.data</span><span class="op">[[</span><span class="st">"cohort"</span><span class="op">]</span><span class="op">]</span>, </span>
+<span>      <span class="va">.data</span><span class="op">[[</span><span class="st">"care_setting"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>      AVG_VISIT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="st">"Visits"</span><span class="op">]</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load the plot_hcru function</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span></span>
+<span>  summary_df <span class="op">=</span> <span class="va">sum_df1</span>,</span>
 <span>  x_var <span class="op">=</span> <span class="st">"time_window"</span>,</span>
-<span>  y_var <span class="op">=</span> <span class="st">"Visits"</span>,</span>
+<span>  y_var <span class="op">=</span> <span class="st">"AVG_VISIT"</span>,</span>
 <span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
 <span>  facet_var <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
 <span>  facet_var_n <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Total visits by domain and cohort"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Average visits by domain and cohort"</span>,</span>
 <span>  x_label <span class="op">=</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
-<span>  y_label <span class="op">=</span> <span class="st">"Total visit"</span>,</span>
+<span>  y_label <span class="op">=</span> <span class="st">"Average visit"</span>,</span>
 <span>  fill_label <span class="op">=</span> <span class="st">"Cohort"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -1276,19 +1286,28 @@ output)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-
 <p><img src="hcruR_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="generate-hcru-plot-for-total-cost-by-cohort-and-timeline">Generate HCRU plot for total cost by cohort and timeline<a class="anchor" aria-label="anchor" href="#generate-hcru-plot-for-total-cost-by-cohort-and-timeline"></a>
+<h3 id="generate-hcru-plot-for-average-cost-by-cohort-and-timeline">Generate HCRU plot for average cost by cohort and timeline<a class="anchor" aria-label="anchor" href="#generate-hcru-plot-for-average-cost-by-cohort-and-timeline"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span></span>
-<span>  summary_df <span class="op">=</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Calculate the total cost</span></span>
+<span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span></span>
+<span>      <span class="va">.data</span><span class="op">[[</span><span class="st">"time_window"</span><span class="op">]</span><span class="op">]</span>, </span>
+<span>      <span class="va">.data</span><span class="op">[[</span><span class="st">"cohort"</span><span class="op">]</span><span class="op">]</span>, </span>
+<span>      <span class="va">.data</span><span class="op">[[</span><span class="st">"care_setting"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>      AVG_COST <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="st">"Cost"</span><span class="op">]</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span></span>
+<span>  summary_df <span class="op">=</span> <span class="va">df2</span>,</span>
 <span>  x_var <span class="op">=</span> <span class="st">"time_window"</span>,</span>
-<span>  y_var <span class="op">=</span> <span class="st">"Cost"</span>,</span>
+<span>  y_var <span class="op">=</span> <span class="st">"AVG_COST"</span>,</span>
 <span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
 <span>  facet_var <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
 <span>  facet_var_n <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Total cost by domain and cohort"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Average cost by domain and cohort"</span>,</span>
 <span>  x_label <span class="op">=</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
-<span>  y_label <span class="op">=</span> <span class="st">"Total cost"</span>,</span>
+<span>  y_label <span class="op">=</span> <span class="st">"Average cost"</span>,</span>
 <span>  fill_label <span class="op">=</span> <span class="st">"Cohort"</span></span>
 <span><span class="op">)</span></span>
 <span></span>

@@ -40,7 +40,7 @@
 #' grouping column.
 #' @param test An optional named list of statistical tests
 #' (e.g., \code{list(age = "wilcox.test")}).
-#' @param timeline A character specifying the timeline window (default "pre1").
+#' @param timeline A character specifying the timeline window (default "Pre").
 #' @param gt_output Logical; if \code{TRUE}, also returns output formatted
 #' using \pkg{gtsummary} (default is \code{TRUE}).
 #'
@@ -82,7 +82,7 @@ estimate_hcru <- function(data,
                           group_var_main = "cohort",
                           group_var_by = "care_setting",
                           test = NULL,
-                          timeline = "pre1",
+                          timeline = "Pre",
                           gt_output = TRUE) {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
@@ -142,7 +142,7 @@ estimate_hcru <- function(data,
 
   # Summarize by settings using gtsummary
   var_list <- c(
-    "Visits", "Cost", "LOS", "Readmit_cnt", "Visit_PPPM",
+    "Visits", "Cost", "LOS", "Readmission", "Visit_PPPM",
     "Visit_PPPY", "Cost_PPPM", "Cost_PPPY"
   )
   summary2 <- summary1 |>
