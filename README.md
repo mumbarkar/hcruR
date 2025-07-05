@@ -74,7 +74,7 @@ hcru_summary <- estimate_hcru(data,
                           group_var_main = "cohort",
                           group_var_by = "care_setting",
                           test = NULL,
-                          timeline = "pre1",
+                          timeline = "Pre",
                           gt_output = FALSE)
 
 hcru_summary
@@ -102,37 +102,59 @@ hcru_summary_gt <- estimate_hcru(data,
                           group_var_main = "cohort",
                           group_var_by = "care_setting",
                           test = NULL,
-                          timeline = "pre1",
+                          timeline = "Pre",
                           gt_output = TRUE)
 
 hcru_summary_gt
 
-## Generate the HCRU plot for total visits per patient by cohort and time-line
-p1 <- plot_hcru(summary_df = hcru_summary$`Summary by settings using dplyr`,
-                         x_var = "time_window",
-                         y_var = "Visits",
-                         cohort_col = "cohort",
-                         facet_var = "care_setting",
-                         facet_var_n = 3,
-                         title = "Total visits by domain and cohort",
-                         x_label = "Healthcare Setting (Domain)",
-                         y_label = "Total visit",
-                         fill_label = "Cohort"
+## Generate the HCRU plot for average visits by cohort and time-line
+# Calculate the average visits
+sum_df1 <- hcru_summary$`Summary by settings using dplyr` |>
+    dplyr::group_by(
+      .data[["time_window"]], 
+      .data[["cohort"]], 
+      .data[["care_setting"]]) |>
+    dplyr::summarise(
+      AVG_VISIT = mean(.data[["Visits"]], na.rm = TRUE), .groups = "drop")
+
+# Load the plot_hcru function
+p1 <- plot_hcru(
+  summary_df = sum_df1,
+  x_var = "time_window",
+  y_var = "AVG_VISIT",
+  cohort_col = "cohort",
+  facet_var = "care_setting",
+  facet_var_n = 3,
+  title = "Average visits by domain and cohort",
+  x_label = "Healthcare Setting (Domain)",
+  y_label = "Average visit",
+  fill_label = "Cohort"
 )
 
 p1
 
-## Generate HCRU plot for average total cost per patient by cohort and timeline
-p2 <- plot_hcru(summary_df = hcru_summary$`Summary by settings using dplyr`,
-                         x_var = "time_window",
-                         y_var = "Cost",
-                         cohort_col = "cohort",
-                         facet_var = "care_setting",
-                         facet_var_n = 3,
-                         title = "Total cost by domain and cohort",
-                         x_label = "Healthcare Setting (Domain)",
-                         y_label = "Total cost",
-                         fill_label = "Cohort"
+
+## Generate HCRU plot for average cost by cohort and timeline
+# Calculate the total cost
+df2 <- hcru_summary$`Summary by settings using dplyr` |>
+    dplyr::group_by(
+      .data[["time_window"]], 
+      .data[["cohort"]], 
+      .data[["care_setting"]]) |>
+    dplyr::summarise(
+      AVG_COST = sum(.data[["Cost"]], na.rm = TRUE), .groups = "drop")
+
+p2 <- plot_hcru(
+  summary_df = df2,
+  x_var = "time_window",
+  y_var = "AVG_COST",
+  cohort_col = "cohort",
+  facet_var = "care_setting",
+  facet_var_n = 3,
+  title = "Average cost by domain and cohort",
+  x_label = "Healthcare Setting (Domain)",
+  y_label = "Average cost",
+  fill_label = "Cohort"
 )
 
 p2
@@ -149,28 +171,33 @@ costs, length of stay, and readmission rates for pre- and post-index periods
 
 #### Arguments
 
-| Argument | Type | Description | Default |
-|------------|------------|------------------------------------|------------|
-| `data` | `data.frame` | Input healthcare dataset containing admission, discharge, and visit information. | — |
-| `cohort_col` | `character` | Name of the column that defines cohort groupings. | `"cohort"` |
-| `patient_id_col` | `character` | Name of the column containing unique patient identifiers. | `"patient_id"` |
-| `admit_col` | `character` | Name of the column containing admission dates. | `"admission_date"` |
-| `discharge_col` | `character` | Name of the column containing discharge dates. | `"discharge_date"` |
-| `index_col` | `character` | Name of the column containing the index (diagnosis) date. | `"index_date"` |
-| `visit_col` | `character` | Name of the column for visit or claim dates. | `"visit_date"` |
-| `encounter_id_col` | `character` | Name of the column containing encounter or claim IDs. | `"encounter_id"` |
-| `setting_col` | `character` | Name of the column representing care settings (e.g., IP, OP, ED). | `"care_setting"` |
-| `pre_days` | `numeric` | Number of days before index date to include in pre-period. | `180` |
-| `post_days` | `numeric` | Number of days after index date to include in post-period. | `365` |
-| `readmission_days_rule` | `numeric` | Number of days to define readmission following a discharge in the IP setting. | `30` |
-| `gt_output` | `logical` | Whether to generate an additional `gtsummary` output. | `FALSE` |
-| `cost_col` | `character` | Name of the column containing cost information. | `"cost_usd"` |
-| `los_col` | `character` | Name of the column for length of stay values. | `"length_of_stay"` |
-| `readmission_col` | `character` | Name of the column indicating readmission status. | `"readmission"` |
-| `time_window_col` | `character` | Name of the column that categorizes records as pre or post index. | `"period"` |
-| `custom_var_list` | `character[]` | Optional list of additional columns to include in summary tables. | `NULL` |
-| `group_var` | `character` | Name of the grouping column for stratified summaries. | `"cohort"` |
-| `test` | `list` | Optional named list of statistical tests (e.g., `list(age = "wilcox.test")`). | `NULL` |
+| Argument                | Type         | Description                                                                  |
+| ----------------------- | ------------ | ---------------------------------------------------------------------------- |
+| `data`                  | `data.frame` | Input EHR or claims dataset                                                  |
+| `cohort_col`            | `character`  | Column name for cohort group                                                 |
+| `patient_id_col`        | `character`  | Column name for patient ID                                                   |
+| `admit_col`             | `character`  | Admission/start date column                                                  |
+| `discharge_col`         | `character`  | Discharge/end date column                                                    |
+| `index_col`             | `character`  | Index or anchor date for each patient                                        |
+| `visit_col`             | `character`  | Visit or claim date                                                          |
+| `encounter_id_col`      | `character`  | Encounter or claim ID                                                        |
+| `setting_col`           | `character`  | Setting type (e.g., "IP", "OP", "ED")                                        |
+| `cost_col`              | `character`  | Column for cost data                                                         |
+| `readmission_col`       | `character`  | Readmission indicator column                                                 |
+| `time_window_col`       | `character`  | "Pre"/"Post" period column                                                   |
+| `los_col`               | `character`  | Length of stay column                                                        |
+| `custom_var_list`       | `character`  | Additional user-defined metrics (optional)                                   |
+| `pre_days`              | `numeric`    | Days before index date (default = 180)                                       |
+| `post_days`             | `numeric`    | Days after index date (default = 365)                                        |
+| `readmission_days_rule` | `numeric`    | Max days for qualifying readmission (default = 30)                           |
+| `group_var_main`        | `character`  | Main grouping variable (default = "cohort")                                  |
+| `group_var_by`          | `character`  | Secondary grouping variable (e.g., "care\_setting")                          |
+| `test`                  | `list`       | Named list of tests for continuous vars (e.g., `list(cost = "wilcox.test")`) |
+| `timeline`              | `character`  | Time window label (e.g., "Pre", "Post")                                      |
+| `gt_output`             | `logical`    | Whether to return a formatted `gtsummary` output (default = TRUE)            |
+| `...`                   | `...`        | Additional arguments for `gtsummary::tbl_summary()` if `gt_output = TRUE`   |
+| `return_type`           | `character`  | Type of output to return: "dplyr" for dplyr summary, "gtsummary" for gtsummary output (default = "dplyr") |
+
 
 `plot_hcru()` provides the visualization of the events of the 
 settings/domains grouped by cohort and time window.

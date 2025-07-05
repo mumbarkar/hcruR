@@ -45,19 +45,13 @@ plot_hcru <- function(
   checkmate::assert_character(fill_label, min.chars = 1)
 
   # Character vector explicitly converted to a factor with levels if present
-  if (all(c("pre1", "post1") %in% summary_df[[x_var]])) {
+  if (all(c("Pre", "Post") %in% summary_df[[x_var]])) {
     summary_df[[x_var]] <- factor(summary_df[[x_var]],
-      levels = c("pre1", "post1")
+      levels = c("Pre", "Post")
     )
   } else {
     summary_df[[x_var]] <- as.factor(summary_df[[x_var]])
   }
-
-  # Summarise total y values for text labels
-  label_df <- summary_df |>
-    dplyr::group_by(.data[[x_var]], .data[[cohort_col]], .data[[facet_var]]) |>
-    dplyr::summarise(
-      sum_value = sum(.data[[y_var]], na.rm = TRUE), .groups = "drop")
 
   p <- ggplot2::ggplot(
     summary_df,
@@ -70,17 +64,13 @@ plot_hcru <- function(
   ) +
     ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.9)) +
     ggplot2::geom_text(
-      data = label_df,
       ggplot2::aes(
-        x = .data[[x_var]],
-        y = .data[["sum_value"]],
-        label = round(.data[["sum_value"]], 1),
+        label = round(.data[[y_var]], 1),
         group = .data[[cohort_col]]
       ),
       position = ggplot2::position_dodge(width = 0.9),
-      vjust = -0.3,
-      size = 3.5,
-      inherit.aes = FALSE
+      vjust = -0.5,
+      size = 3.5
     ) +
     ggplot2::facet_wrap(
       ~ .data[[facet_var]],

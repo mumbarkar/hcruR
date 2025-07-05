@@ -89,9 +89,9 @@ preproc_hcru_fun <- function(data,
     dplyr::mutate(
       time_window = dplyr::case_when(
         .data[["period"]] == "pre" & .data[["visit_days"]] >= 0 &
-          .data[["visit_days"]] <= pre_days ~ "pre1",
+          .data[["visit_days"]] <= pre_days ~ "Pre",
         .data[["period"]] == "post" & .data[["visit_days"]] >= 0 &
-          .data[["visit_days"]] <= post_days ~ "post1",
+          .data[["visit_days"]] <= post_days ~ "Post",
         TRUE ~ NA_character_
       )
     ) |>
@@ -149,7 +149,7 @@ preproc_hcru_fun <- function(data,
 #' grouping column.
 #' @param group_var_by A character specifying the name of the secondary
 #' grouping column.
-#' @param timeline A character specifying the timeline window (default "pre1").
+#' @param timeline A character specifying the timeline window (default "Pre").
 #'
 #' @importFrom gtsummary tbl_summary add_overall add_p modify_header add_n
 #' modify_spanning_header all_continuous all_categorical all_stat_cols
@@ -168,7 +168,7 @@ summarize_descriptives_gt <- function(
     group_var_main = NULL, # e.g., "cohort"
     group_var_by = NULL, # e.g., "setting"
     test = NULL,
-    timeline = "pre1") {
+    timeline = "Pre") {
   # Basic checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(var_list, null.ok = TRUE)
@@ -190,7 +190,7 @@ summarize_descriptives_gt <- function(
     # Drop IP-only vars if not IP
     vars_this <- var_list
     if (setting != "IP") {
-      vars_this <- setdiff(vars_this, c("LOS", "Readmit_cnt"))
+      vars_this <- setdiff(vars_this, c("LOS", "Readmission"))
     }
 
     # Cohort group (control, treatment, etc.)
@@ -306,7 +306,7 @@ summarize_descriptives <- function(data,
         sum(.data[[los_col]], na.rm = TRUE),
         NA_real_
       ),
-      Readmit_cnt = dplyr::if_else(.data[[setting_col]] == "IP",
+      Readmission = dplyr::if_else(.data[[setting_col]] == "IP",
         sum(.data[[readmission_col]],
           na.rm = TRUE
         ),

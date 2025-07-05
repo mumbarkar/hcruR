@@ -120,7 +120,7 @@
 <span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>                          <span class="at">group_var_main =</span> <span class="st">"cohort"</span>,</span>
 <span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>                          <span class="at">group_var_by =</span> <span class="st">"care_setting"</span>,</span>
 <span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>                          <span class="at">test =</span> <span class="cn">NULL</span>,</span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>                          <span class="at">timeline =</span> <span class="st">"pre1"</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>                          <span class="at">timeline =</span> <span class="st">"Pre"</span>,</span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>                          <span class="at">gt_output =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a></span>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>hcru_summary</span>
@@ -148,40 +148,62 @@
 <span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a>                          <span class="at">group_var_main =</span> <span class="st">"cohort"</span>,</span>
 <span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a>                          <span class="at">group_var_by =</span> <span class="st">"care_setting"</span>,</span>
 <span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a>                          <span class="at">test =</span> <span class="cn">NULL</span>,</span>
-<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a>                          <span class="at">timeline =</span> <span class="st">"pre1"</span>,</span>
+<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a>                          <span class="at">timeline =</span> <span class="st">"Pre"</span>,</span>
 <span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a>                          <span class="at">gt_output =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a></span>
 <span id="cb2-65"><a href="#cb2-65" tabindex="-1"></a>hcru_summary_gt</span>
 <span id="cb2-66"><a href="#cb2-66" tabindex="-1"></a></span>
-<span id="cb2-67"><a href="#cb2-67" tabindex="-1"></a><span class="do">## Generate the HCRU plot for total visits per patient by cohort and time-line</span></span>
-<span id="cb2-68"><a href="#cb2-68" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plot_hcru</span>(<span class="at">summary_df =</span> hcru_summary<span class="sc">$</span><span class="st">`</span><span class="at">Summary by settings using dplyr</span><span class="st">`</span>,</span>
-<span id="cb2-69"><a href="#cb2-69" tabindex="-1"></a>                         <span class="at">x_var =</span> <span class="st">"time_window"</span>,</span>
-<span id="cb2-70"><a href="#cb2-70" tabindex="-1"></a>                         <span class="at">y_var =</span> <span class="st">"Visits"</span>,</span>
-<span id="cb2-71"><a href="#cb2-71" tabindex="-1"></a>                         <span class="at">cohort_col =</span> <span class="st">"cohort"</span>,</span>
-<span id="cb2-72"><a href="#cb2-72" tabindex="-1"></a>                         <span class="at">facet_var =</span> <span class="st">"care_setting"</span>,</span>
-<span id="cb2-73"><a href="#cb2-73" tabindex="-1"></a>                         <span class="at">facet_var_n =</span> <span class="dv">3</span>,</span>
-<span id="cb2-74"><a href="#cb2-74" tabindex="-1"></a>                         <span class="at">title =</span> <span class="st">"Total visits by domain and cohort"</span>,</span>
-<span id="cb2-75"><a href="#cb2-75" tabindex="-1"></a>                         <span class="at">x_label =</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
-<span id="cb2-76"><a href="#cb2-76" tabindex="-1"></a>                         <span class="at">y_label =</span> <span class="st">"Total visit"</span>,</span>
-<span id="cb2-77"><a href="#cb2-77" tabindex="-1"></a>                         <span class="at">fill_label =</span> <span class="st">"Cohort"</span></span>
-<span id="cb2-78"><a href="#cb2-78" tabindex="-1"></a>)</span>
-<span id="cb2-79"><a href="#cb2-79" tabindex="-1"></a></span>
-<span id="cb2-80"><a href="#cb2-80" tabindex="-1"></a>p1</span>
-<span id="cb2-81"><a href="#cb2-81" tabindex="-1"></a></span>
-<span id="cb2-82"><a href="#cb2-82" tabindex="-1"></a><span class="do">## Generate HCRU plot for average total cost per patient by cohort and timeline</span></span>
-<span id="cb2-83"><a href="#cb2-83" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plot_hcru</span>(<span class="at">summary_df =</span> hcru_summary<span class="sc">$</span><span class="st">`</span><span class="at">Summary by settings using dplyr</span><span class="st">`</span>,</span>
-<span id="cb2-84"><a href="#cb2-84" tabindex="-1"></a>                         <span class="at">x_var =</span> <span class="st">"time_window"</span>,</span>
-<span id="cb2-85"><a href="#cb2-85" tabindex="-1"></a>                         <span class="at">y_var =</span> <span class="st">"Cost"</span>,</span>
-<span id="cb2-86"><a href="#cb2-86" tabindex="-1"></a>                         <span class="at">cohort_col =</span> <span class="st">"cohort"</span>,</span>
-<span id="cb2-87"><a href="#cb2-87" tabindex="-1"></a>                         <span class="at">facet_var =</span> <span class="st">"care_setting"</span>,</span>
-<span id="cb2-88"><a href="#cb2-88" tabindex="-1"></a>                         <span class="at">facet_var_n =</span> <span class="dv">3</span>,</span>
-<span id="cb2-89"><a href="#cb2-89" tabindex="-1"></a>                         <span class="at">title =</span> <span class="st">"Total cost by domain and cohort"</span>,</span>
-<span id="cb2-90"><a href="#cb2-90" tabindex="-1"></a>                         <span class="at">x_label =</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
-<span id="cb2-91"><a href="#cb2-91" tabindex="-1"></a>                         <span class="at">y_label =</span> <span class="st">"Total cost"</span>,</span>
-<span id="cb2-92"><a href="#cb2-92" tabindex="-1"></a>                         <span class="at">fill_label =</span> <span class="st">"Cohort"</span></span>
-<span id="cb2-93"><a href="#cb2-93" tabindex="-1"></a>)</span>
-<span id="cb2-94"><a href="#cb2-94" tabindex="-1"></a></span>
-<span id="cb2-95"><a href="#cb2-95" tabindex="-1"></a>p2</span></code></pre></div>
+<span id="cb2-67"><a href="#cb2-67" tabindex="-1"></a><span class="do">## Generate the HCRU plot for average visits by cohort and time-line</span></span>
+<span id="cb2-68"><a href="#cb2-68" tabindex="-1"></a><span class="co"># Calculate the average visits</span></span>
+<span id="cb2-69"><a href="#cb2-69" tabindex="-1"></a>sum_df1 <span class="ot">&lt;-</span> hcru_summary<span class="sc">$</span><span class="st">`</span><span class="at">Summary by settings using dplyr</span><span class="st">`</span> <span class="sc">|&gt;</span></span>
+<span id="cb2-70"><a href="#cb2-70" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(</span>
+<span id="cb2-71"><a href="#cb2-71" tabindex="-1"></a>      .data[[<span class="st">"time_window"</span>]], </span>
+<span id="cb2-72"><a href="#cb2-72" tabindex="-1"></a>      .data[[<span class="st">"cohort"</span>]], </span>
+<span id="cb2-73"><a href="#cb2-73" tabindex="-1"></a>      .data[[<span class="st">"care_setting"</span>]]) <span class="sc">|&gt;</span></span>
+<span id="cb2-74"><a href="#cb2-74" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb2-75"><a href="#cb2-75" tabindex="-1"></a>      <span class="at">AVG_VISIT =</span> <span class="fu">mean</span>(.data[[<span class="st">"Visits"</span>]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb2-76"><a href="#cb2-76" tabindex="-1"></a></span>
+<span id="cb2-77"><a href="#cb2-77" tabindex="-1"></a><span class="co"># Load the plot_hcru function</span></span>
+<span id="cb2-78"><a href="#cb2-78" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plot_hcru</span>(</span>
+<span id="cb2-79"><a href="#cb2-79" tabindex="-1"></a>  <span class="at">summary_df =</span> sum_df1,</span>
+<span id="cb2-80"><a href="#cb2-80" tabindex="-1"></a>  <span class="at">x_var =</span> <span class="st">"time_window"</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" tabindex="-1"></a>  <span class="at">y_var =</span> <span class="st">"AVG_VISIT"</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" tabindex="-1"></a>  <span class="at">cohort_col =</span> <span class="st">"cohort"</span>,</span>
+<span id="cb2-83"><a href="#cb2-83" tabindex="-1"></a>  <span class="at">facet_var =</span> <span class="st">"care_setting"</span>,</span>
+<span id="cb2-84"><a href="#cb2-84" tabindex="-1"></a>  <span class="at">facet_var_n =</span> <span class="dv">3</span>,</span>
+<span id="cb2-85"><a href="#cb2-85" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Average visits by domain and cohort"</span>,</span>
+<span id="cb2-86"><a href="#cb2-86" tabindex="-1"></a>  <span class="at">x_label =</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
+<span id="cb2-87"><a href="#cb2-87" tabindex="-1"></a>  <span class="at">y_label =</span> <span class="st">"Average visit"</span>,</span>
+<span id="cb2-88"><a href="#cb2-88" tabindex="-1"></a>  <span class="at">fill_label =</span> <span class="st">"Cohort"</span></span>
+<span id="cb2-89"><a href="#cb2-89" tabindex="-1"></a>)</span>
+<span id="cb2-90"><a href="#cb2-90" tabindex="-1"></a></span>
+<span id="cb2-91"><a href="#cb2-91" tabindex="-1"></a>p1</span>
+<span id="cb2-92"><a href="#cb2-92" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" tabindex="-1"></a><span class="do">## Generate HCRU plot for average cost by cohort and timeline</span></span>
+<span id="cb2-95"><a href="#cb2-95" tabindex="-1"></a><span class="co"># Calculate the total cost</span></span>
+<span id="cb2-96"><a href="#cb2-96" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> hcru_summary<span class="sc">$</span><span class="st">`</span><span class="at">Summary by settings using dplyr</span><span class="st">`</span> <span class="sc">|&gt;</span></span>
+<span id="cb2-97"><a href="#cb2-97" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(</span>
+<span id="cb2-98"><a href="#cb2-98" tabindex="-1"></a>      .data[[<span class="st">"time_window"</span>]], </span>
+<span id="cb2-99"><a href="#cb2-99" tabindex="-1"></a>      .data[[<span class="st">"cohort"</span>]], </span>
+<span id="cb2-100"><a href="#cb2-100" tabindex="-1"></a>      .data[[<span class="st">"care_setting"</span>]]) <span class="sc">|&gt;</span></span>
+<span id="cb2-101"><a href="#cb2-101" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb2-102"><a href="#cb2-102" tabindex="-1"></a>      <span class="at">AVG_COST =</span> <span class="fu">sum</span>(.data[[<span class="st">"Cost"</span>]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb2-103"><a href="#cb2-103" tabindex="-1"></a></span>
+<span id="cb2-104"><a href="#cb2-104" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plot_hcru</span>(</span>
+<span id="cb2-105"><a href="#cb2-105" tabindex="-1"></a>  <span class="at">summary_df =</span> df2,</span>
+<span id="cb2-106"><a href="#cb2-106" tabindex="-1"></a>  <span class="at">x_var =</span> <span class="st">"time_window"</span>,</span>
+<span id="cb2-107"><a href="#cb2-107" tabindex="-1"></a>  <span class="at">y_var =</span> <span class="st">"AVG_COST"</span>,</span>
+<span id="cb2-108"><a href="#cb2-108" tabindex="-1"></a>  <span class="at">cohort_col =</span> <span class="st">"cohort"</span>,</span>
+<span id="cb2-109"><a href="#cb2-109" tabindex="-1"></a>  <span class="at">facet_var =</span> <span class="st">"care_setting"</span>,</span>
+<span id="cb2-110"><a href="#cb2-110" tabindex="-1"></a>  <span class="at">facet_var_n =</span> <span class="dv">3</span>,</span>
+<span id="cb2-111"><a href="#cb2-111" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Average cost by domain and cohort"</span>,</span>
+<span id="cb2-112"><a href="#cb2-112" tabindex="-1"></a>  <span class="at">x_label =</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
+<span id="cb2-113"><a href="#cb2-113" tabindex="-1"></a>  <span class="at">y_label =</span> <span class="st">"Average cost"</span>,</span>
+<span id="cb2-114"><a href="#cb2-114" tabindex="-1"></a>  <span class="at">fill_label =</span> <span class="st">"Cohort"</span></span>
+<span id="cb2-115"><a href="#cb2-115" tabindex="-1"></a>)</span>
+<span id="cb2-116"><a href="#cb2-116" tabindex="-1"></a></span>
+<span id="cb2-117"><a href="#cb2-117" tabindex="-1"></a>p2</span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -191,139 +213,138 @@
 <div class="section level4">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a>
 </h4>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="16%">
-<col width="16%">
-<col width="50%">
-<col width="16%">
+<col width="20%">
+<col width="10%">
+<col width="68%">
 </colgroup>
 <thead><tr>
 <th>Argument</th>
 <th>Type</th>
 <th>Description</th>
-<th>Default</th>
 </tr></thead>
 <tbody>
 <tr>
 <td><code>data</code></td>
 <td><code>data.frame</code></td>
-<td>Input healthcare dataset containing admission, discharge, and visit information.</td>
-<td>—</td>
+<td>Input EHR or claims dataset</td>
 </tr>
 <tr>
 <td><code>cohort_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column that defines cohort groupings.</td>
-<td><code>"cohort"</code></td>
+<td>Column name for cohort group</td>
 </tr>
 <tr>
 <td><code>patient_id_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column containing unique patient identifiers.</td>
-<td><code>"patient_id"</code></td>
+<td>Column name for patient ID</td>
 </tr>
 <tr>
 <td><code>admit_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column containing admission dates.</td>
-<td><code>"admission_date"</code></td>
+<td>Admission/start date column</td>
 </tr>
 <tr>
 <td><code>discharge_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column containing discharge dates.</td>
-<td><code>"discharge_date"</code></td>
+<td>Discharge/end date column</td>
 </tr>
 <tr>
 <td><code>index_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column containing the index (diagnosis) date.</td>
-<td><code>"index_date"</code></td>
+<td>Index or anchor date for each patient</td>
 </tr>
 <tr>
 <td><code>visit_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column for visit or claim dates.</td>
-<td><code>"visit_date"</code></td>
+<td>Visit or claim date</td>
 </tr>
 <tr>
 <td><code>encounter_id_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column containing encounter or claim IDs.</td>
-<td><code>"encounter_id"</code></td>
+<td>Encounter or claim ID</td>
 </tr>
 <tr>
 <td><code>setting_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column representing care settings (e.g., IP, OP, ED).</td>
-<td><code>"care_setting"</code></td>
-</tr>
-<tr>
-<td><code>pre_days</code></td>
-<td><code>numeric</code></td>
-<td>Number of days before index date to include in pre-period.</td>
-<td><code>180</code></td>
-</tr>
-<tr>
-<td><code>post_days</code></td>
-<td><code>numeric</code></td>
-<td>Number of days after index date to include in post-period.</td>
-<td><code>365</code></td>
-</tr>
-<tr>
-<td><code>readmission_days_rule</code></td>
-<td><code>numeric</code></td>
-<td>Number of days to define readmission following a discharge in the IP setting.</td>
-<td><code>30</code></td>
-</tr>
-<tr>
-<td><code>gt_output</code></td>
-<td><code>logical</code></td>
-<td>Whether to generate an additional <code>gtsummary</code> output.</td>
-<td><code>FALSE</code></td>
+<td>Setting type (e.g., “IP”, “OP”, “ED”)</td>
 </tr>
 <tr>
 <td><code>cost_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column containing cost information.</td>
-<td><code>"cost_usd"</code></td>
-</tr>
-<tr>
-<td><code>los_col</code></td>
-<td><code>character</code></td>
-<td>Name of the column for length of stay values.</td>
-<td><code>"length_of_stay"</code></td>
+<td>Column for cost data</td>
 </tr>
 <tr>
 <td><code>readmission_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column indicating readmission status.</td>
-<td><code>"readmission"</code></td>
+<td>Readmission indicator column</td>
 </tr>
 <tr>
 <td><code>time_window_col</code></td>
 <td><code>character</code></td>
-<td>Name of the column that categorizes records as pre or post index.</td>
-<td><code>"period"</code></td>
+<td>“Pre”/“Post” period column</td>
+</tr>
+<tr>
+<td><code>los_col</code></td>
+<td><code>character</code></td>
+<td>Length of stay column</td>
 </tr>
 <tr>
 <td><code>custom_var_list</code></td>
-<td><code>character[]</code></td>
-<td>Optional list of additional columns to include in summary tables.</td>
-<td><code>NULL</code></td>
+<td><code>character</code></td>
+<td>Additional user-defined metrics (optional)</td>
 </tr>
 <tr>
-<td><code>group_var</code></td>
+<td><code>pre_days</code></td>
+<td><code>numeric</code></td>
+<td>Days before index date (default = 180)</td>
+</tr>
+<tr>
+<td><code>post_days</code></td>
+<td><code>numeric</code></td>
+<td>Days after index date (default = 365)</td>
+</tr>
+<tr>
+<td><code>readmission_days_rule</code></td>
+<td><code>numeric</code></td>
+<td>Max days for qualifying readmission (default = 30)</td>
+</tr>
+<tr>
+<td><code>group_var_main</code></td>
 <td><code>character</code></td>
-<td>Name of the grouping column for stratified summaries.</td>
-<td><code>"cohort"</code></td>
+<td>Main grouping variable (default = “cohort”)</td>
+</tr>
+<tr>
+<td><code>group_var_by</code></td>
+<td><code>character</code></td>
+<td>Secondary grouping variable (e.g., “care_setting”)</td>
 </tr>
 <tr>
 <td><code>test</code></td>
 <td><code>list</code></td>
-<td>Optional named list of statistical tests (e.g., <code>list(age = "wilcox.test")</code>).</td>
-<td><code>NULL</code></td>
+<td>Named list of tests for continuous vars (e.g., <code>list(cost = "wilcox.test")</code>)</td>
+</tr>
+<tr>
+<td><code>timeline</code></td>
+<td><code>character</code></td>
+<td>Time window label (e.g., “Pre”, “Post”)</td>
+</tr>
+<tr>
+<td><code>gt_output</code></td>
+<td><code>logical</code></td>
+<td>Whether to return a formatted <code>gtsummary</code> output (default = TRUE)</td>
+</tr>
+<tr>
+<td><code>...</code></td>
+<td><code>...</code></td>
+<td>Additional arguments for <code><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_summary.html" class="external-link">gtsummary::tbl_summary()</a></code> if <code>gt_output = TRUE</code>
+</td>
+</tr>
+<tr>
+<td><code>return_type</code></td>
+<td><code>character</code></td>
+<td>Type of output to return: “dplyr” for dplyr summary, “gtsummary” for gtsummary output (default = “dplyr”)</td>
 </tr>
 </tbody>
 </table>

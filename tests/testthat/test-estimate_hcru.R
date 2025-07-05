@@ -1,6 +1,7 @@
 library(testthat)
 library(dplyr)
 library(tibble)
+library(hcruR)
 
 test_that("estimate_hcru returns expected output without gt_summary", {
   df <- tibble(

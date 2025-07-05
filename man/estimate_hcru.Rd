@@ -25,7 +25,7 @@ estimate_hcru(
   group_var_main = "cohort",
   group_var_by = "care_setting",
   test = NULL,
-  timeline = "pre1",
+  timeline = "Pre",
   gt_output = TRUE
 )
 }
@@ -84,7 +84,7 @@ grouping column.}
 \item{test}{An optional named list of statistical tests
 (e.g., \code{list(age = "wilcox.test")}).}
 
-\item{timeline}{A character specifying the timeline window (default "pre1").}
+\item{timeline}{A character specifying the timeline window (default "Pre").}
 
 \item{gt_output}{Logical; if \code{TRUE}, also returns output formatted
 using \pkg{gtsummary} (default is \code{TRUE}).}

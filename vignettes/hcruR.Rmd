@@ -30,27 +30,27 @@ head(hcru_sample_data)
 ```{r}
 # Step 1: Estimate HCRU
 hcru_summary <- estimate_hcru(data,
-  cohort_col = "cohort",
-  patient_id_col = "patient_id",
-  admit_col = "admission_date",
-  discharge_col = "discharge_date",
-  index_col = "index_date",
-  visit_col = "visit_date",
-  encounter_id_col = "encounter_id",
-  setting_col = "care_setting",
-  cost_col = "cost_usd",
-  readmission_col = "readmission",
-  time_window_col = "period",
-  los_col = "length_of_stay",
-  custom_var_list = NULL,
-  pre_days = 180,
-  post_days = 365,
-  readmission_days_rule = 30,
-  group_var_main = "cohort",
-  group_var_by = "care_setting",
-  test = NULL,
-  timeline = "pre1",
-  gt_output = FALSE
+                              cohort_col = "cohort",
+                              patient_id_col = "patient_id",
+                              admit_col = "admission_date",
+                              discharge_col = "discharge_date",
+                              index_col = "index_date",
+                              visit_col = "visit_date",
+                              encounter_id_col = "encounter_id",
+                              setting_col = "care_setting",
+                              cost_col = "cost_usd",
+                              readmission_col = "readmission",
+                              time_window_col = "period",
+                              los_col = "length_of_stay",
+                              custom_var_list = NULL,
+                              pre_days = 180,
+                              post_days = 365,
+                              readmission_days_rule = 30,
+                              group_var_main = "cohort",
+                              group_var_by = "care_setting",
+                              test = NULL,
+                              timeline = "Pre",
+                              gt_output = FALSE
 )
 
 hcru_summary
@@ -61,65 +61,84 @@ hcru_summary
 ```{r,  results = 'asis'}
 # Step 1: Estimate HCRU
 hcru_summary_gt <- estimate_hcru(data,
-  cohort_col = "cohort",
-  patient_id_col = "patient_id",
-  admit_col = "admission_date",
-  discharge_col = "discharge_date",
-  index_col = "index_date",
-  visit_col = "visit_date",
-  encounter_id_col = "encounter_id",
-  setting_col = "care_setting",
-  cost_col = "cost_usd",
-  readmission_col = "readmission",
-  time_window_col = "period",
-  los_col = "length_of_stay",
-  custom_var_list = NULL,
-  pre_days = 180,
-  post_days = 365,
-  readmission_days_rule = 30,
-  group_var_main = "cohort",
-  group_var_by = "care_setting",
-  test = NULL,
-  timeline = "pre1",
-  gt_output = TRUE
+                                 cohort_col = "cohort",
+                                 patient_id_col = "patient_id",
+                                 admit_col = "admission_date",
+                                 discharge_col = "discharge_date",
+                                 index_col = "index_date",
+                                 visit_col = "visit_date",
+                                 encounter_id_col = "encounter_id",
+                                 setting_col = "care_setting",
+                                 cost_col = "cost_usd",
+                                 readmission_col = "readmission",
+                                 time_window_col = "period",
+                                 los_col = "length_of_stay",
+                                 custom_var_list = NULL,
+                                 pre_days = 180,
+                                 post_days = 365,
+                                 readmission_days_rule = 30,
+                                 group_var_main = "cohort",
+                                 group_var_by = "care_setting",
+                                 test = NULL,
+                                 timeline = "Pre",
+                                 gt_output = TRUE
 )
 
 hcru_summary_gt$`Summary by settings using gtsummary`
 ```
 
 
-### Generate the HCRU plot: total visits by cohort and time-line
+### Generate the HCRU plot: average visits by cohort and time-line
 
 ```{r}
+# Calculate the average visits
+sum_df1 <- hcru_summary$`Summary by settings using dplyr` |>
+    dplyr::group_by(
+      .data[["time_window"]], 
+      .data[["cohort"]], 
+      .data[["care_setting"]]) |>
+    dplyr::summarise(
+      AVG_VISIT = mean(.data[["Visits"]], na.rm = TRUE), .groups = "drop")
+
+# Load the plot_hcru function
 p1 <- plot_hcru(
-  summary_df = hcru_summary$`Summary by settings using dplyr`,
+  summary_df = sum_df1,
   x_var = "time_window",
-  y_var = "Visits",
+  y_var = "AVG_VISIT",
   cohort_col = "cohort",
   facet_var = "care_setting",
   facet_var_n = 3,
-  title = "Total visits by domain and cohort",
+  title = "Average visits by domain and cohort",
   x_label = "Healthcare Setting (Domain)",
-  y_label = "Total visit",
+  y_label = "Average visit",
   fill_label = "Cohort"
 )
 
 p1
 ```
 
-### Generate HCRU plot for total cost by cohort and timeline
+### Generate HCRU plot for average cost by cohort and timeline
 
 ```{r}
+# Calculate the total cost
+df2 <- hcru_summary$`Summary by settings using dplyr` |>
+    dplyr::group_by(
+      .data[["time_window"]], 
+      .data[["cohort"]], 
+      .data[["care_setting"]]) |>
+    dplyr::summarise(
+      AVG_COST = sum(.data[["Cost"]], na.rm = TRUE), .groups = "drop")
+
 p2 <- plot_hcru(
-  summary_df = hcru_summary$`Summary by settings using dplyr`,
+  summary_df = df2,
   x_var = "time_window",
-  y_var = "Cost",
+  y_var = "AVG_COST",
   cohort_col = "cohort",
   facet_var = "care_setting",
   facet_var_n = 3,
-  title = "Total cost by domain and cohort",
+  title = "Average cost by domain and cohort",
   x_label = "Healthcare Setting (Domain)",
-  y_label = "Total cost",
+  y_label = "Average cost",
   fill_label = "Cohort"
 )
 
