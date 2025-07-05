@@ -57,9 +57,11 @@ setting column e.g. IP, ED, OP, etc.}
 
 \item{cost_col}{A character specifying the name of cost column.}
 
-\item{readmission_col}{A character specifying the name of readmission column.}
+\item{readmission_col}{A character specifying the name of readmission
+column.}
 
-\item{time_window_col}{A character specifying the name of time window column.}
+\item{time_window_col}{A character specifying the name of time window
+column.}
 
 \item{los_col}{A character specifying the name of length of stay column.}
 
@@ -73,9 +75,11 @@ columns.}
 \item{readmission_days_rule}{Rule for how many days can be permissible to
 define readmission criteria in AP setting (default 30 days).}
 
-\item{group_var_main}{A character specifying the name of the main grouping column.}
+\item{group_var_main}{A character specifying the name of the main
+grouping column.}
 
-\item{group_var_by}{A character specifying the name of the secondary grouping column.}
+\item{group_var_by}{A character specifying the name of the secondary
+grouping column.}
 
 \item{test}{An optional named list of statistical tests
 (e.g., \code{list(age = "wilcox.test")}).}

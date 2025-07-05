@@ -68,6 +68,7 @@
 <span></span>
 <span><span class="co"># Load sample data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">hcru_sample_data</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">hcru_sample_data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hcru_sample_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
 <span><span class="co">#&gt;   patient_id cohort  encounter_id care_setting visit_date admission_date</span></span>
@@ -87,46 +88,56 @@ plots)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-d
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Step 1: Estimate HCRU</span></span>
-<span><span class="va">hcru_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_hcru.html">estimate_hcru</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">hcru_sample_data</span>,</span>
-<span>                             cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>                             patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
-<span>                             admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
-<span>                             discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
-<span>                             index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
-<span>                             visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
-<span>                             encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
-<span>                             setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>                             cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
-<span>                             readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
-<span>                             time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
-<span>                             los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
-<span>                             custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                             pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
-<span>                             post_days <span class="op">=</span> <span class="fl">365</span>,</span>
-<span>                             readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>                             group_var <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>                             test <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                             gt_output <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">hcru_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_hcru.html">estimate_hcru</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
+<span>  admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
+<span>  discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
+<span>  index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
+<span>  visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
+<span>  encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
+<span>  setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>  cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
+<span>  readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
+<span>  time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
+<span>  los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
+<span>  custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>  post_days <span class="op">=</span> <span class="fl">365</span>,</span>
+<span>  readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>  test <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  timeline <span class="op">=</span> <span class="st">"pre1"</span>,</span>
+<span>  gt_output <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: The `update` argument of `modify_header()` is deprecated as of gtsummary 2.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `modify_header(...)` input instead. Dynamic dots allow for syntax like</span></span>
+<span><span class="co">#&gt;   `modify_header(!!!list(...))`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">gtsummary</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/ddsjoberg/gtsummary/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span></span>
 <span><span class="va">hcru_summary</span></span>
 <span><span class="co">#&gt; $`Summary by settings using dplyr`</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 10</span></span></span>
-<span><span class="co">#&gt;    cohort    care_setting period Patients Visits     Cost Avg_visits_per_patient</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> control   ED           post         65    101  <span style="text-decoration: underline;">262</span>128.                   1.55</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> control   ED           pre          50     57  <span style="text-decoration: underline;">150</span>620.                   1.14</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> control   IP           post         78    127 1<span style="text-decoration: underline;">877</span>868.                   1.63</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> control   IP           pre          53     66 1<span style="text-decoration: underline;">066</span>097.                   1.25</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> control   OP           post         67    111  <span style="text-decoration: underline;">116</span>931.                   1.66</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> control   OP           pre          50     61   <span style="text-decoration: underline;">62</span>427.                   1.22</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> treatment ED           post         78    126  <span style="text-decoration: underline;">335</span>850.                   1.62</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> treatment ED           pre          51     63  <span style="text-decoration: underline;">153</span>831.                   1.24</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> treatment IP           post         68    100 1<span style="text-decoration: underline;">523</span>437.                   1.47</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> treatment IP           pre          65     80 1<span style="text-decoration: underline;">333</span>135.                   1.23</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> treatment OP           post         76    126  <span style="text-decoration: underline;">133</span>056.                   1.66</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> treatment OP           pre          56     71   <span style="text-decoration: underline;">67</span>378.                   1.27</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: Avg_cost_per_patient &lt;dbl&gt;, Avg_LOS &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Readmit_30d_Rate &lt;dbl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 757 × 15</span></span></span>
+<span><span class="co">#&gt;    patient_id cohort  care_setting time_window  Days  Month   Year Visits   Cost</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P_1001     control ED           post1         319 10.5   0.873       2  <span style="text-decoration: underline;">4</span>677.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P_1001     control ED           pre1           18  0.592 0.049<span style="text-decoration: underline;">2</span>      1  <span style="text-decoration: underline;">1</span>871.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P_1001     control IP           post1          21  0.690 0.057<span style="text-decoration: underline;">5</span>      1 <span style="text-decoration: underline;">23</span>591.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P_1001     control IP           pre1           22  0.723 0.060<span style="text-decoration: underline;">2</span>      1 <span style="text-decoration: underline;">23</span>142.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P_1001     control OP           post1          13  0.427 0.035<span style="text-decoration: underline;">6</span>      1   699.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P_1002     treatm… ED           post1         271  8.91  0.741       2  <span style="text-decoration: underline;">3</span>088.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P_1002     treatm… ED           pre1          153  5.03  0.419       1  <span style="text-decoration: underline;">1</span>869.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P_1002     treatm… IP           post1         270  8.88  0.739       3 <span style="text-decoration: underline;">42</span>218.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P_1002     treatm… OP           pre1          195  6.41  0.534       2  <span style="text-decoration: underline;">1</span>910.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P_1003     treatm… ED           post1          59  1.94  0.161       1  <span style="text-decoration: underline;">4</span>895.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 747 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: LOS &lt;dbl&gt;, Readmit_cnt &lt;dbl&gt;, Visit_PPPM &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Visit_PPPY &lt;dbl&gt;, Cost_PPPM &lt;dbl&gt;, Cost_PPPY &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="generate-hcru-summary-using-gtsummary-a-publication-ready-output">Generate HCRU summary using gtsummary (a publication ready
@@ -134,26 +145,29 @@ output)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Step 1: Estimate HCRU</span></span>
-<span><span class="va">hcru_summary_gt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_hcru.html">estimate_hcru</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">hcru_sample_data</span>,</span>
-<span>                             cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>                             patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
-<span>                             admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
-<span>                             discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
-<span>                             index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
-<span>                             visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
-<span>                             encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
-<span>                             setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>                             cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
-<span>                             readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
-<span>                             time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
-<span>                             los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
-<span>                             custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                             pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
-<span>                             post_days <span class="op">=</span> <span class="fl">365</span>,</span>
-<span>                             readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>                             group_var <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>                             test <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                             gt_output <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">hcru_summary_gt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_hcru.html">estimate_hcru</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  patient_id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
+<span>  admit_col <span class="op">=</span> <span class="st">"admission_date"</span>,</span>
+<span>  discharge_col <span class="op">=</span> <span class="st">"discharge_date"</span>,</span>
+<span>  index_col <span class="op">=</span> <span class="st">"index_date"</span>,</span>
+<span>  visit_col <span class="op">=</span> <span class="st">"visit_date"</span>,</span>
+<span>  encounter_id_col <span class="op">=</span> <span class="st">"encounter_id"</span>,</span>
+<span>  setting_col <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>  cost_col <span class="op">=</span> <span class="st">"cost_usd"</span>,</span>
+<span>  readmission_col <span class="op">=</span> <span class="st">"readmission"</span>,</span>
+<span>  time_window_col <span class="op">=</span> <span class="st">"period"</span>,</span>
+<span>  los_col <span class="op">=</span> <span class="st">"length_of_stay"</span>,</span>
+<span>  custom_var_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>  post_days <span class="op">=</span> <span class="fl">365</span>,</span>
+<span>  readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>  test <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  timeline <span class="op">=</span> <span class="st">"pre1"</span>,</span>
+<span>  gt_output <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">hcru_summary_gt</span><span class="op">$</span><span class="va">`Summary by settings using gtsummary`</span></span></code></pre></div>
 <div id="mwlefoodfi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -606,155 +620,635 @@ output)<a class="anchor" aria-label="anchor" href="#generate-hcru-summary-using-
 }
 </style>
 <table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
+<caption><span class="gt_from_md"><strong>Summary Table</strong></span></caption>
+  <thead>
 <tr class="gt_col_headings gt_spanner_row">
-<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Variable</strong></span></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="2" colspan="1" scope="col" id="n"><span class="gt_from_md"><strong>N</strong></span></th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="level 1; stat_0">
-        <div class="gt_column_spanner"><span class="gt_from_md"><strong>Group</strong></span></div>
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="level 1; stat_1_1">
+        <div class="gt_column_spanner"><span class="gt_from_md">ED</span></div>
       </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="2" colspan="1" scope="col" id="p.value">
-<span class="gt_from_md"><strong>p-value</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span>
-</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="level 1; stat_1_2">
+        <div class="gt_column_spanner"><span class="gt_from_md">IP</span></div>
+      </th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" scope="colgroup" id="level 1; stat_1_3">
+        <div class="gt_column_spanner"><span class="gt_from_md">OP</span></div>
+      </th>
     </tr>
 <tr class="gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_0">
-<span class="gt_from_md"><strong>Overall</strong><br>
-N = 1,089</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_1_1">
+<span class="gt_from_md">control, N = 50</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_1">
-<span class="gt_from_md"><strong>control</strong><br>
-N = 523</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_2_1">
+<span class="gt_from_md">treatment, N = 51</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_2">
-<span class="gt_from_md"><strong>treatment</strong><br>
-N = 566</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value_1">
+<span class="gt_from_md"><strong>p-value</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span>
+</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_1_2">
+<span class="gt_from_md">control, N = 53</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_2_2">
+<span class="gt_from_md">treatment, N = 65</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value_2">
+<span class="gt_from_md"><strong>p-value</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>3</sup></span>
+</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_1_3">
+<span class="gt_from_md">control, N = 50</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_2_3">
+<span class="gt_from_md">treatment, N = 56</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="p.value_3">
+<span class="gt_from_md"><strong>p-value</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>4</sup></span>
 </th>
     </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr>
-<td headers="label" class="gt_row gt_left" style="font-weight: bold;">cost_usd</td>
-<td headers="n" class="gt_row gt_center">1,089</td>
-<td headers="stat_0" class="gt_row gt_center"><br></td>
-<td headers="stat_1" class="gt_row gt_center"><br></td>
-<td headers="stat_2" class="gt_row gt_center"><br></td>
-<td headers="p.value" class="gt_row gt_center">0.2</td>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Visits</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center">0.2</td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.7</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center">0.4</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    1</td>
+<td headers="stat_1_1" class="gt_row gt_center">43 (86%)</td>
+<td headers="stat_2_1" class="gt_row gt_center">39 (76%)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">41 (77%)</td>
+<td headers="stat_2_2" class="gt_row gt_center">50 (77%)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">41 (82%)</td>
+<td headers="stat_2_3" class="gt_row gt_center">42 (75%)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    2</td>
+<td headers="stat_1_1" class="gt_row gt_center">7 (14%)</td>
+<td headers="stat_2_1" class="gt_row gt_center">12 (24%)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">11 (21%)</td>
+<td headers="stat_2_2" class="gt_row gt_center">15 (23%)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">7 (14%)</td>
+<td headers="stat_2_3" class="gt_row gt_center">13 (23%)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Cost</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center">&gt;0.9</td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.7</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center">0.7</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Sum</td>
+<td headers="stat_1_1" class="gt_row gt_center">150,620</td>
+<td headers="stat_2_1" class="gt_row gt_center">153,831</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">1,066,097</td>
+<td headers="stat_2_2" class="gt_row gt_center">1,333,135</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">62,427</td>
+<td headers="stat_2_3" class="gt_row gt_center">67,378</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Mean (SD)</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">6,504 (8,063)</td>
-<td headers="stat_1" class="gt_row gt_center">6,761 (8,149)</td>
-<td headers="stat_2" class="gt_row gt_center">6,266 (7,982)</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">3,012 (1,866)</td>
+<td headers="stat_2_1" class="gt_row gt_center">3,016 (1,768)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">20,115 (11,119)</td>
+<td headers="stat_2_2" class="gt_row gt_center">20,510 (9,822)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">1,249 (794)</td>
+<td headers="stat_2_3" class="gt_row gt_center">1,203 (834)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">2,522 (1,127, 9,433)</td>
-<td headers="stat_1" class="gt_row gt_center">2,775 (1,122, 9,649)</td>
-<td headers="stat_2" class="gt_row gt_center">2,276 (1,127, 8,534)</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">2,769 (1,689, 4,020)</td>
+<td headers="stat_2_1" class="gt_row gt_center">2,651 (1,630, 4,341)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">18,748 (12,805, 27,399)</td>
+<td headers="stat_2_2" class="gt_row gt_center">19,962 (12,593, 25,844)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">1,048 (551, 1,704)</td>
+<td headers="stat_2_3" class="gt_row gt_center">1,140 (462, 1,773)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Q1</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">1,127</td>
-<td headers="stat_1" class="gt_row gt_center">1,122</td>
-<td headers="stat_2" class="gt_row gt_center">1,127</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">1,689</td>
+<td headers="stat_2_1" class="gt_row gt_center">1,630</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">12,805</td>
+<td headers="stat_2_2" class="gt_row gt_center">12,593</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">551</td>
+<td headers="stat_2_3" class="gt_row gt_center">462</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Q3</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">9,433</td>
-<td headers="stat_1" class="gt_row gt_center">9,649</td>
-<td headers="stat_2" class="gt_row gt_center">8,534</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">4,020</td>
+<td headers="stat_2_1" class="gt_row gt_center">4,341</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">27,399</td>
+<td headers="stat_2_2" class="gt_row gt_center">25,844</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">1,704</td>
+<td headers="stat_2_3" class="gt_row gt_center">1,773</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Min - Max</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">104 - 29,990</td>
-<td headers="stat_1" class="gt_row gt_center">111 - 29,779</td>
-<td headers="stat_2" class="gt_row gt_center">104 - 29,990</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">221 - 9,208</td>
+<td headers="stat_2_1" class="gt_row gt_center">381 - 8,467</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">3,171 - 50,838</td>
+<td headers="stat_2_2" class="gt_row gt_center">4,203 - 50,380</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">111 - 3,299</td>
+<td headers="stat_2_3" class="gt_row gt_center">129 - 3,432</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td headers="label" class="gt_row gt_left" style="font-weight: bold;">length_of_stay</td>
-<td headers="n" class="gt_row gt_center">373</td>
-<td headers="stat_0" class="gt_row gt_center"><br></td>
-<td headers="stat_1" class="gt_row gt_center"><br></td>
-<td headers="stat_2" class="gt_row gt_center"><br></td>
-<td headers="p.value" class="gt_row gt_center">0.7</td>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Visit_PPPM</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center">0.6</td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.059</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center">&gt;0.9</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Sum</td>
+<td headers="stat_1_1" class="gt_row gt_center">32.28</td>
+<td headers="stat_2_1" class="gt_row gt_center">48.96</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">69.12</td>
+<td headers="stat_2_2" class="gt_row gt_center">52.23</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">48.34</td>
+<td headers="stat_2_3" class="gt_row gt_center">56.04</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Mean (SD)</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">6.42 (2.91)</td>
-<td headers="stat_1" class="gt_row gt_center">6.36 (2.88)</td>
-<td headers="stat_2" class="gt_row gt_center">6.49 (2.96)</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">0.65 (1.03)</td>
+<td headers="stat_2_1" class="gt_row gt_center">0.96 (2.32)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">1.30 (2.10)</td>
+<td headers="stat_2_2" class="gt_row gt_center">0.80 (1.40)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">0.97 (2.18)</td>
+<td headers="stat_2_3" class="gt_row gt_center">1.00 (2.25)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">6.00 (4.00, 9.00)</td>
-<td headers="stat_1" class="gt_row gt_center">6.00 (4.00, 9.00)</td>
-<td headers="stat_2" class="gt_row gt_center">6.50 (4.00, 9.00)</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">0.28 (0.23, 0.52)</td>
+<td headers="stat_2_1" class="gt_row gt_center">0.31 (0.25, 0.45)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">0.54 (0.31, 0.80)</td>
+<td headers="stat_2_2" class="gt_row gt_center">0.37 (0.25, 0.66)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">0.39 (0.25, 0.68)</td>
+<td headers="stat_2_3" class="gt_row gt_center">0.40 (0.26, 0.68)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Q1</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">4.00</td>
-<td headers="stat_1" class="gt_row gt_center">4.00</td>
-<td headers="stat_2" class="gt_row gt_center">4.00</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">0.23</td>
+<td headers="stat_2_1" class="gt_row gt_center">0.25</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">0.31</td>
+<td headers="stat_2_2" class="gt_row gt_center">0.25</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">0.25</td>
+<td headers="stat_2_3" class="gt_row gt_center">0.26</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Q3</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">9.00</td>
-<td headers="stat_1" class="gt_row gt_center">9.00</td>
-<td headers="stat_2" class="gt_row gt_center">9.00</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">0.52</td>
+<td headers="stat_2_1" class="gt_row gt_center">0.45</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">0.80</td>
+<td headers="stat_2_2" class="gt_row gt_center">0.66</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">0.68</td>
+<td headers="stat_2_3" class="gt_row gt_center">0.68</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Min - Max</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">2.00 - 11.00</td>
-<td headers="stat_1" class="gt_row gt_center">2.00 - 11.00</td>
-<td headers="stat_2" class="gt_row gt_center">2.00 - 11.00</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="stat_1_1" class="gt_row gt_center">0.18 - 6.08</td>
+<td headers="stat_2_1" class="gt_row gt_center">0.17 - 15.21</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">0.17 - 10.14</td>
+<td headers="stat_2_2" class="gt_row gt_center">0.17 - 10.14</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">0.19 - 15.21</td>
+<td headers="stat_2_3" class="gt_row gt_center">0.17 - 15.21</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 <tr>
-<td headers="label" class="gt_row gt_left">    Unknown</td>
-<td headers="n" class="gt_row gt_center"><br></td>
-<td headers="stat_0" class="gt_row gt_center">716</td>
-<td headers="stat_1" class="gt_row gt_center">330</td>
-<td headers="stat_2" class="gt_row gt_center">386</td>
-<td headers="p.value" class="gt_row gt_center"><br></td>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Visit_PPPY</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center">0.6</td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.059</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center">&gt;0.9</td>
 </tr>
 <tr>
-<td headers="label" class="gt_row gt_left" style="font-weight: bold;">readmission</td>
-<td headers="n" class="gt_row gt_center">1,089</td>
-<td headers="stat_0" class="gt_row gt_center">47 (4.3%)</td>
-<td headers="stat_1" class="gt_row gt_center">30 (5.7%)</td>
-<td headers="stat_2" class="gt_row gt_center">17 (3.0%)</td>
-<td headers="p.value" class="gt_row gt_center">0.027</td>
+<td headers="label" class="gt_row gt_left">    Sum</td>
+<td headers="stat_1_1" class="gt_row gt_center">388</td>
+<td headers="stat_2_1" class="gt_row gt_center">588</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">831</td>
+<td headers="stat_2_2" class="gt_row gt_center">628</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">581</td>
+<td headers="stat_2_3" class="gt_row gt_center">673</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1_1" class="gt_row gt_center">8 (12)</td>
+<td headers="stat_2_1" class="gt_row gt_center">12 (28)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">16 (25)</td>
+<td headers="stat_2_2" class="gt_row gt_center">10 (17)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">12 (26)</td>
+<td headers="stat_2_3" class="gt_row gt_center">12 (27)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1_1" class="gt_row gt_center">3 (3, 6)</td>
+<td headers="stat_2_1" class="gt_row gt_center">4 (3, 5)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">7 (4, 10)</td>
+<td headers="stat_2_2" class="gt_row gt_center">4 (3, 8)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">5 (3, 8)</td>
+<td headers="stat_2_3" class="gt_row gt_center">5 (3, 8)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q1</td>
+<td headers="stat_1_1" class="gt_row gt_center">3</td>
+<td headers="stat_2_1" class="gt_row gt_center">3</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">4</td>
+<td headers="stat_2_2" class="gt_row gt_center">3</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">3</td>
+<td headers="stat_2_3" class="gt_row gt_center">3</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q3</td>
+<td headers="stat_1_1" class="gt_row gt_center">6</td>
+<td headers="stat_2_1" class="gt_row gt_center">5</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">10</td>
+<td headers="stat_2_2" class="gt_row gt_center">8</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">8</td>
+<td headers="stat_2_3" class="gt_row gt_center">8</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Min - Max</td>
+<td headers="stat_1_1" class="gt_row gt_center">2 - 73</td>
+<td headers="stat_2_1" class="gt_row gt_center">2 - 183</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">2 - 122</td>
+<td headers="stat_2_2" class="gt_row gt_center">2 - 122</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">2 - 183</td>
+<td headers="stat_2_3" class="gt_row gt_center">2 - 183</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Cost_PPPM</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center">0.8</td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.5</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center">0.4</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Sum</td>
+<td headers="stat_1_1" class="gt_row gt_center">91,236</td>
+<td headers="stat_2_1" class="gt_row gt_center">135,168</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">1,352,632</td>
+<td headers="stat_2_2" class="gt_row gt_center">898,000</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">40,212</td>
+<td headers="stat_2_3" class="gt_row gt_center">47,274</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1_1" class="gt_row gt_center">1,825 (3,856)</td>
+<td headers="stat_2_1" class="gt_row gt_center">2,650 (6,501)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">25,521 (49,388)</td>
+<td headers="stat_2_2" class="gt_row gt_center">13,815 (31,643)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">804 (1,296)</td>
+<td headers="stat_2_3" class="gt_row gt_center">844 (1,590)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1_1" class="gt_row gt_center">743 (498, 1,316)</td>
+<td headers="stat_2_1" class="gt_row gt_center">760 (493, 1,316)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">7,821 (3,584, 14,898)</td>
+<td headers="stat_2_2" class="gt_row gt_center">6,447 (4,567, 12,358)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">375 (222, 912)</td>
+<td headers="stat_2_3" class="gt_row gt_center">334 (203, 703)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q1</td>
+<td headers="stat_1_1" class="gt_row gt_center">498</td>
+<td headers="stat_2_1" class="gt_row gt_center">493</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">3,584</td>
+<td headers="stat_2_2" class="gt_row gt_center">4,567</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">222</td>
+<td headers="stat_2_3" class="gt_row gt_center">203</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q3</td>
+<td headers="stat_1_1" class="gt_row gt_center">1,316</td>
+<td headers="stat_2_1" class="gt_row gt_center">1,316</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">14,898</td>
+<td headers="stat_2_2" class="gt_row gt_center">12,358</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">912</td>
+<td headers="stat_2_3" class="gt_row gt_center">703</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Min - Max</td>
+<td headers="stat_1_1" class="gt_row gt_center">93 - 22,330</td>
+<td headers="stat_2_1" class="gt_row gt_center">141 - 33,841</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">1,121 - 234,312</td>
+<td headers="stat_2_2" class="gt_row gt_center">1,113 - 246,638</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">68 - 8,373</td>
+<td headers="stat_2_3" class="gt_row gt_center">32 - 9,937</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Cost_PPPY</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center">0.8</td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.5</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center">0.4</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Sum</td>
+<td headers="stat_1_1" class="gt_row gt_center">1,096,318</td>
+<td headers="stat_2_1" class="gt_row gt_center">1,624,220</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">16,253,639</td>
+<td headers="stat_2_2" class="gt_row gt_center">10,790,638</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">483,198</td>
+<td headers="stat_2_3" class="gt_row gt_center">568,061</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1_1" class="gt_row gt_center">21,926 (46,330)</td>
+<td headers="stat_2_1" class="gt_row gt_center">31,847 (78,122)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">306,672 (593,467)</td>
+<td headers="stat_2_2" class="gt_row gt_center">166,010 (380,231)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">9,664 (15,577)</td>
+<td headers="stat_2_3" class="gt_row gt_center">10,144 (19,103)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1_1" class="gt_row gt_center">8,928 (5,984, 15,813)</td>
+<td headers="stat_2_1" class="gt_row gt_center">9,137 (5,919, 15,814)</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">93,975 (43,062, 179,024)</td>
+<td headers="stat_2_2" class="gt_row gt_center">77,465 (54,876, 148,500)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">4,507 (2,670, 10,955)</td>
+<td headers="stat_2_3" class="gt_row gt_center">4,010 (2,436, 8,449)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q1</td>
+<td headers="stat_1_1" class="gt_row gt_center">5,984</td>
+<td headers="stat_2_1" class="gt_row gt_center">5,919</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">43,062</td>
+<td headers="stat_2_2" class="gt_row gt_center">54,876</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">2,670</td>
+<td headers="stat_2_3" class="gt_row gt_center">2,436</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q3</td>
+<td headers="stat_1_1" class="gt_row gt_center">15,813</td>
+<td headers="stat_2_1" class="gt_row gt_center">15,814</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">179,024</td>
+<td headers="stat_2_2" class="gt_row gt_center">148,500</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">10,955</td>
+<td headers="stat_2_3" class="gt_row gt_center">8,449</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Min - Max</td>
+<td headers="stat_1_1" class="gt_row gt_center">1,123 - 268,322</td>
+<td headers="stat_2_1" class="gt_row gt_center">1,699 - 406,644</td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">13,475 - 2,815,570</td>
+<td headers="stat_2_2" class="gt_row gt_center">13,370 - 2,963,676</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">813 - 100,608</td>
+<td headers="stat_2_3" class="gt_row gt_center">387 - 119,403</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    3</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">1 (1.9%)</td>
+<td headers="stat_2_2" class="gt_row gt_center">0 (0%)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center">2 (4.0%)</td>
+<td headers="stat_2_3" class="gt_row gt_center">1 (1.8%)</td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">LOS</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td>
+<td headers="p.value_2" class="gt_row gt_center">0.8</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Sum</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">390.0</td>
+<td headers="stat_2_2" class="gt_row gt_center">519.0</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">7.4 (3.7)</td>
+<td headers="stat_2_2" class="gt_row gt_center">8.0 (4.9)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">7.0 (5.0, 10.0)</td>
+<td headers="stat_2_2" class="gt_row gt_center">7.0 (4.0, 10.0)</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q1</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">5.0</td>
+<td headers="stat_2_2" class="gt_row gt_center">4.0</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Q3</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">10.0</td>
+<td headers="stat_2_2" class="gt_row gt_center">10.0</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Min - Max</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">2.0 - 18.0</td>
+<td headers="stat_2_2" class="gt_row gt_center">2.0 - 22.0</td>
+<td headers="p.value_2" class="gt_row gt_center"><br></td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Readmit_cnt</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="p.value_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center">9 (17%)</td>
+<td headers="stat_2_2" class="gt_row gt_center">6 (9.2%)</td>
+<td headers="p.value_2" class="gt_row gt_center">0.2</td>
+<td headers="stat_1_3" class="gt_row gt_center"><br></td>
+<td headers="stat_2_3" class="gt_row gt_center"><br></td>
+<td headers="p.value_3" class="gt_row gt_center"><br></td>
 </tr>
 </tbody>
 <tfoot class="gt_footnotes">
 <tr>
-<td class="gt_footnote" colspan="6">
+<td class="gt_footnote" colspan="10">
 <span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> <span class="gt_from_md">n (%)</span>
 </td>
     </tr>
 <tr>
-<td class="gt_footnote" colspan="6">
-<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span> <span class="gt_from_md">Wilcoxon rank sum test; Pearson’s Chi-squared test</span>
+<td class="gt_footnote" colspan="10">
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span> <span class="gt_from_md">Pearson’s Chi-squared test; Wilcoxon rank sum test</span>
+</td>
+    </tr>
+<tr>
+<td class="gt_footnote" colspan="10">
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>3</sup></span> <span class="gt_from_md">Fisher’s exact test; Wilcoxon rank sum test; Pearson’s Chi-squared test</span>
+</td>
+    </tr>
+<tr>
+<td class="gt_footnote" colspan="10">
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>4</sup></span> <span class="gt_from_md">Fisher’s exact test; Wilcoxon rank sum test</span>
 </td>
     </tr>
 </tfoot>
@@ -762,45 +1256,43 @@ N = 566</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </div>
 </div>
 <div class="section level3">
-<h3 id="generate-the-hcru-plot-average-visits-per-patient-by-cohort-and-time-line">Generate the HCRU plot: average visits per patient by cohort and
-time-line<a class="anchor" aria-label="anchor" href="#generate-the-hcru-plot-average-visits-per-patient-by-cohort-and-time-line"></a>
+<h3 id="generate-the-hcru-plot-total-visits-by-cohort-and-time-line">Generate the HCRU plot: total visits by cohort and time-line<a class="anchor" aria-label="anchor" href="#generate-the-hcru-plot-total-visits-by-cohort-and-time-line"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Plot results</span></span>
-<span><span class="va">p_avg_visit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span>summary_df <span class="op">=</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span>,</span>
-<span>               x_var <span class="op">=</span> <span class="st">"period"</span>,</span>
-<span>               y_var <span class="op">=</span> <span class="st">"Avg_visits_per_patient"</span>,</span>
-<span>               cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>               facet_var <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>               facet_var_n <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>               title <span class="op">=</span> <span class="st">"Per patient average visits by domain and cohort"</span>,</span>
-<span>               x_lable <span class="op">=</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
-<span>               y_lable <span class="op">=</span> <span class="st">"Average visits"</span>,</span>
-<span>               fill_lable <span class="op">=</span> <span class="st">"Cohort"</span></span>
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span></span>
+<span>  summary_df <span class="op">=</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span>,</span>
+<span>  x_var <span class="op">=</span> <span class="st">"time_window"</span>,</span>
+<span>  y_var <span class="op">=</span> <span class="st">"Visits"</span>,</span>
+<span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  facet_var <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>  facet_var_n <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Total visits by domain and cohort"</span>,</span>
+<span>  x_label <span class="op">=</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
+<span>  y_label <span class="op">=</span> <span class="st">"Total visit"</span>,</span>
+<span>  fill_label <span class="op">=</span> <span class="st">"Cohort"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p_avg_visit</span></span></code></pre></div>
+<span><span class="va">p1</span></span></code></pre></div>
 <p><img src="hcruR_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="generate-the-hcru-plot-for-average-costs-per-patient-by-cohort-and-time-line">Generate the HCRU plot for average costs per patient by cohort and
-time-line<a class="anchor" aria-label="anchor" href="#generate-the-hcru-plot-for-average-costs-per-patient-by-cohort-and-time-line"></a>
+<h3 id="generate-hcru-plot-for-total-cost-by-cohort-and-timeline">Generate HCRU plot for total cost by cohort and timeline<a class="anchor" aria-label="anchor" href="#generate-hcru-plot-for-total-cost-by-cohort-and-timeline"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Plot results</span></span>
-<span><span class="va">p_avg_cost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span>summary_df <span class="op">=</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span>,</span>
-<span>               x_var <span class="op">=</span> <span class="st">"period"</span>,</span>
-<span>               y_var <span class="op">=</span> <span class="st">"Avg_cost_per_patient"</span>,</span>
-<span>               cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
-<span>               facet_var <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
-<span>               facet_var_n <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>               title <span class="op">=</span> <span class="st">"Per patient average cost by domain and cohort"</span>,</span>
-<span>               x_lable <span class="op">=</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
-<span>               y_lable <span class="op">=</span> <span class="st">"Average costs"</span>,</span>
-<span>               fill_lable <span class="op">=</span> <span class="st">"Cohort"</span></span>
+<code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hcru.html">plot_hcru</a></span><span class="op">(</span></span>
+<span>  summary_df <span class="op">=</span> <span class="va">hcru_summary</span><span class="op">$</span><span class="va">`Summary by settings using dplyr`</span>,</span>
+<span>  x_var <span class="op">=</span> <span class="st">"time_window"</span>,</span>
+<span>  y_var <span class="op">=</span> <span class="st">"Cost"</span>,</span>
+<span>  cohort_col <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  facet_var <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
+<span>  facet_var_n <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Total cost by domain and cohort"</span>,</span>
+<span>  x_label <span class="op">=</span> <span class="st">"Healthcare Setting (Domain)"</span>,</span>
+<span>  y_label <span class="op">=</span> <span class="st">"Total cost"</span>,</span>
+<span>  fill_label <span class="op">=</span> <span class="st">"Cohort"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p_avg_cost</span></span></code></pre></div>
+<span><span class="va">p2</span></span></code></pre></div>
 <p><img src="hcruR_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

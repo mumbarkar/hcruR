@@ -3,11 +3,11 @@
 from electronic health record data across various care settings
 (e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
 encounters, costs, length of stay, and readmission rates for pre- and
-post-index periods"><meta property="og:description" content="This function calculates estimates of healthcare resource utilization (HCRU)
+post-index periods."><meta property="og:description" content="This function calculates estimates of healthcare resource utilization (HCRU)
 from electronic health record data across various care settings
 (e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
 encounters, costs, length of stay, and readmission rates for pre- and
-post-index periods"></head><body>
+post-index periods."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -46,7 +46,7 @@ post-index periods"></head><body>
 from electronic health record data across various care settings
 (e.g., IP, OP, ED/ER). It provides descriptive summaries of patient counts,
 encounters, costs, length of stay, and readmission rates for pre- and
-post-index periods</p>
+post-index periods.</p>
     </div>
 
     <div class="section level2">
@@ -69,9 +69,11 @@ post-index periods</p>
 <span>  pre_days <span class="op">=</span> <span class="fl">180</span>,</span>
 <span>  post_days <span class="op">=</span> <span class="fl">365</span>,</span>
 <span>  readmission_days_rule <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  group_var <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  group_var_main <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  group_var_by <span class="op">=</span> <span class="st">"care_setting"</span>,</span>
 <span>  test <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  gt_output <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  timeline <span class="op">=</span> <span class="st">"pre1"</span>,</span>
+<span>  gt_output <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -80,41 +82,41 @@ post-index periods</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A dataframe specifying the health care details</p></dd>
+<dd><p>A dataframe specifying the health care details.</p></dd>
 
 
 <dt id="arg-cohort-col">cohort_col<a class="anchor" aria-label="anchor" href="#arg-cohort-col"></a></dt>
-<dd><p>A character specifying the name of the cohort column</p></dd>
+<dd><p>A character specifying the name of the cohort column.</p></dd>
 
 
 <dt id="arg-patient-id-col">patient_id_col<a class="anchor" aria-label="anchor" href="#arg-patient-id-col"></a></dt>
 <dd><p>A character specifying the name of the patient
-identifier column</p></dd>
+identifier column.</p></dd>
 
 
 <dt id="arg-admit-col">admit_col<a class="anchor" aria-label="anchor" href="#arg-admit-col"></a></dt>
 <dd><p>A character specifying the name of the date of admission
-column</p></dd>
+column.</p></dd>
 
 
 <dt id="arg-discharge-col">discharge_col<a class="anchor" aria-label="anchor" href="#arg-discharge-col"></a></dt>
 <dd><p>A character specifying the name of the date of
-discharge column</p></dd>
+discharge column.</p></dd>
 
 
 <dt id="arg-index-col">index_col<a class="anchor" aria-label="anchor" href="#arg-index-col"></a></dt>
 <dd><p>A character specifying the name of the index date or
-diagnosis column</p></dd>
+diagnosis column.</p></dd>
 
 
 <dt id="arg-visit-col">visit_col<a class="anchor" aria-label="anchor" href="#arg-visit-col"></a></dt>
 <dd><p>A character specifying the name of the date of
-visit/claim column</p></dd>
+visit/claim column.</p></dd>
 
 
 <dt id="arg-encounter-id-col">encounter_id_col<a class="anchor" aria-label="anchor" href="#arg-encounter-id-col"></a></dt>
 <dd><p>A character specifying the name of the
-encounter/claim column</p></dd>
+encounter/claim column.</p></dd>
 
 
 <dt id="arg-setting-col">setting_col<a class="anchor" aria-label="anchor" href="#arg-setting-col"></a></dt>
@@ -123,41 +125,49 @@ setting column e.g. IP, ED, OP, etc.</p></dd>
 
 
 <dt id="arg-cost-col">cost_col<a class="anchor" aria-label="anchor" href="#arg-cost-col"></a></dt>
-<dd><p>A character specifying the name of cost column</p></dd>
+<dd><p>A character specifying the name of cost column.</p></dd>
 
 
 <dt id="arg-readmission-col">readmission_col<a class="anchor" aria-label="anchor" href="#arg-readmission-col"></a></dt>
-<dd><p>A character specifying the name of readmission column</p></dd>
+<dd><p>A character specifying the name of readmission
+column.</p></dd>
 
 
 <dt id="arg-time-window-col">time_window_col<a class="anchor" aria-label="anchor" href="#arg-time-window-col"></a></dt>
-<dd><p>A character specifying the name of time window column</p></dd>
+<dd><p>A character specifying the name of time window
+column.</p></dd>
 
 
 <dt id="arg-los-col">los_col<a class="anchor" aria-label="anchor" href="#arg-los-col"></a></dt>
-<dd><p>A character specifying the name of length of stay column</p></dd>
+<dd><p>A character specifying the name of length of stay column.</p></dd>
 
 
 <dt id="arg-custom-var-list">custom_var_list<a class="anchor" aria-label="anchor" href="#arg-custom-var-list"></a></dt>
-<dd><p>A character vector provides the list of additional
-columns</p></dd>
+<dd><p>A character vector providing the list of additional
+columns.</p></dd>
 
 
 <dt id="arg-pre-days">pre_days<a class="anchor" aria-label="anchor" href="#arg-pre-days"></a></dt>
-<dd><p>Number of days before index (default 180 days)</p></dd>
+<dd><p>Number of days before index (default 180 days).</p></dd>
 
 
 <dt id="arg-post-days">post_days<a class="anchor" aria-label="anchor" href="#arg-post-days"></a></dt>
-<dd><p>Number of days after index (default 365 days)</p></dd>
+<dd><p>Number of days after index (default 365 days).</p></dd>
 
 
 <dt id="arg-readmission-days-rule">readmission_days_rule<a class="anchor" aria-label="anchor" href="#arg-readmission-days-rule"></a></dt>
 <dd><p>Rule for how many days can be permissible to
-define readmission criteria in AP setting (default 30 days)</p></dd>
+define readmission criteria in AP setting (default 30 days).</p></dd>
 
 
-<dt id="arg-group-var">group_var<a class="anchor" aria-label="anchor" href="#arg-group-var"></a></dt>
-<dd><p>A character specifying the name of grouping column</p></dd>
+<dt id="arg-group-var-main">group_var_main<a class="anchor" aria-label="anchor" href="#arg-group-var-main"></a></dt>
+<dd><p>A character specifying the name of the main
+grouping column.</p></dd>
+
+
+<dt id="arg-group-var-by">group_var_by<a class="anchor" aria-label="anchor" href="#arg-group-var-by"></a></dt>
+<dd><p>A character specifying the name of the secondary
+grouping column.</p></dd>
 
 
 <dt id="arg-test">test<a class="anchor" aria-label="anchor" href="#arg-test"></a></dt>
@@ -165,9 +175,13 @@ define readmission criteria in AP setting (default 30 days)</p></dd>
 (e.g., <code>list(age = "wilcox.test")</code>).</p></dd>
 
 
+<dt id="arg-timeline">timeline<a class="anchor" aria-label="anchor" href="#arg-timeline"></a></dt>
+<dd><p>A character specifying the timeline window (default "pre1").</p></dd>
+
+
 <dt id="arg-gt-output">gt_output<a class="anchor" aria-label="anchor" href="#arg-gt-output"></a></dt>
 <dd><p>Logical; if <code>TRUE</code>, also returns output formatted
-using <span class="pkg">gtsummary</span> (default is <code>FALSE</code>).</p></dd>
+using <span class="pkg">gtsummary</span> (default is <code>TRUE</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
