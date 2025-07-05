@@ -1,8 +1,8 @@
 Package: hcruR
-Title: Estimate and Compare Healthcare Resource Utilization (HCRU) for RWE
+Title: Estimate, Compare, and Visualize the Healthcare Resource Utilization for Real World Evidence
 Version: 0.1.0
 Authors@R: person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre"))
-Description: Tools to estimate and compare healthcare resource utilization (HCRU) by domain and cohort. Supports cohort-based event counting, cost summarization, time window analysis, and plotting for RWE studies.
+Description: Tools to estimate and compare healthcare resource utilization by domain and cohort. Supports cohort-based event counting, cost summary, time window analysis, and plotting for Real World Evidence studies.
 Depends: R (>= 4.5.0)
 Imports:
     checkmate,
@@ -15,6 +15,7 @@ Imports:
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Language: en-US
 RoxygenNote: 7.3.2
 Suggests: 
     devtools,

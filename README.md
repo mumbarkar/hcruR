@@ -173,7 +173,7 @@ costs, length of stay, and readmission rates for pre- and post-index periods
 
 | Argument                | Type         | Description                                                                  |
 | ----------------------- | ------------ | ---------------------------------------------------------------------------- |
-| `data`                  | `data.frame` | Input EHR or claims dataset                                                  |
+| `data`                  | `data.frame` | Input claims dataset                                                  |
 | `cohort_col`            | `character`  | Column name for cohort group                                                 |
 | `patient_id_col`        | `character`  | Column name for patient ID                                                   |
 | `admit_col`             | `character`  | Admission/start date column                                                  |
