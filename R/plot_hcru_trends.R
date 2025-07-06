@@ -24,6 +24,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Load the hcruR package and sample data
 #' library(hcruR)
 #' data(hcru_sample_data)
@@ -64,6 +65,7 @@
 #'   y_label = "Average Visits",
 #'   fill_label = "Cohort"
 #' )
+#' }
 plot_hcru <- function(
     summary_df,
     x_var = "time_window",

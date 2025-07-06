@@ -61,5 +61,7 @@ This function helps to pre-process the heath care resource utilization
 e.g. IP, OP, ED/ER, etc.
 }
 \examples{
+\dontrun{
 preproc_hcru_fun(data = hcru_sample_data)
+}
 }

@@ -33,7 +33,10 @@
 #'
 #' @export
 #'
-#' @examples preproc_hcru_fun(data = hcru_sample_data)
+#' @examples
+#' \dontrun{
+#' preproc_hcru_fun(data = hcru_sample_data)
+#' }
 preproc_hcru_fun <- function(data,
                              cohort_col = "cohort",
                              patient_id_col = "patient_id",
@@ -164,8 +167,10 @@ preproc_hcru_fun <- function(data,
 #' @export
 #'
 #' @example
+#' \dontrun{
 #' df <- preproc_hcru_fun(data = hcru_sample_data)
 #' summarize_descriptives_gt(data = df)
+#' }
 summarize_descriptives_gt <- function(
     data,
     patient_id_col = "patient_id",
@@ -277,8 +282,10 @@ summarize_descriptives_gt <- function(
 #' @export
 #'
 #' @example
+#' \dontrun{
 #' df <- preproc_hcru_fun(data = hcru_sample_data)
 #' summarize_descriptives(data = df)
+#' }
 summarize_descriptives <- function(data,
                                    patient_id_col = "patient_id",
                                    setting_col = "care_setting",

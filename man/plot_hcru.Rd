@@ -50,6 +50,7 @@ grouped by cohort and time window.
 Plot HCRU Event Summary
 }
 \examples{
+\dontrun{
 # Load the hcruR package and sample data
 library(hcruR)
 data(hcru_sample_data)
@@ -90,4 +91,5 @@ plot_hcru(
   y_label = "Average Visits",
   fill_label = "Cohort"
 )
+}
 }

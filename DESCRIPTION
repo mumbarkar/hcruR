@@ -8,10 +8,11 @@ Authors@R:
              role = c("aut", "cre", "cph"))
     )
 Description: 
-    Tools to estimate, compare, and visualize healthcare resource utilization (HCRU) 
-    by care setting and cohort. Provides support for pre/post-index analysis, 
-    readmission logic, cost and visit summaries, and publication-ready plots 
-    for Real-World Evidence (RWE) studies using EHR or claims data.
+    Tools to estimate, compare, and visualize healthcare resource utilization
+    by care setting and cohort. Provides support for pre/post-index analysis,
+    readmission logic, cost and visit summaries, and publication-ready plots
+    for Real-World Evidence studies using electronic health records or claims
+    data.
 Depends: 
     R (>= 4.2.0)
 Imports:
