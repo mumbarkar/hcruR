@@ -30,6 +30,7 @@
 #' @import checkmate
 #'
 #' @returns dataframe with HCRU estimates.
+#'
 #' @export
 #'
 #' @examples preproc_hcru_fun(data = hcru_sample_data)
@@ -159,14 +160,18 @@ preproc_hcru_fun <- function(data,
 #' @import purrr
 #'
 #' @return A gtsummary table object
+#'
 #' @export
 #'
+#' @example
+#' df <- preproc_hcru_fun(data = hcru_sample_data)
+#' summarize_descriptives_gt(data = df)
 summarize_descriptives_gt <- function(
     data,
-    patient_id_col,
+    patient_id_col = "patient_id",
     var_list = NULL,
-    group_var_main = NULL, # e.g., "cohort"
-    group_var_by = NULL, # e.g., "setting"
+    group_var_main = "cohort", # e.g., "cohort"
+    group_var_by = "care_setting", # e.g., "setting"
     test = NULL,
     timeline = "Pre") {
   # Basic checks
@@ -175,6 +180,8 @@ summarize_descriptives_gt <- function(
   checkmate::assert_character(group_var_main, len = 1)
   checkmate::assert_character(group_var_by, len = 1)
   checkmate::assert_list(test, null.ok = TRUE)
+  checkmate::assert_character(timeline, len = 1)
+  checkmate::assert_character(patient_id_col, len = 1)
 
   # Filter the data as per the timeline
   data <- data |>
@@ -266,8 +273,12 @@ summarize_descriptives_gt <- function(
 #' @import checkmate
 #'
 #' @return A table object
+#'
 #' @export
 #'
+#' @example
+#' df <- preproc_hcru_fun(data = hcru_sample_data)
+#' summarize_descriptives(data = df)
 summarize_descriptives <- function(data,
                                    patient_id_col = "patient_id",
                                    setting_col = "care_setting",

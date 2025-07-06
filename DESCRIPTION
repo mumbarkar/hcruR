@@ -1,9 +1,19 @@
 Package: hcruR
-Title: Estimate, Compare, and Visualize the Healthcare Resource Utilization for Real World Evidence
-Version: 0.1.0
-Authors@R: person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre"))
-Description: Tools to estimate and compare healthcare resource utilization by domain and cohort. Supports cohort-based event counting, cost summary, time window analysis, and plotting for Real World Evidence studies.
-Depends: R (>= 4.5.0)
+Title: Estimate, Compare, and Visualize Healthcare Resource Utilization for Real-World Evidence
+Version: 1.0.0
+Authors@R: 
+    c(
+      person("Maheshkumar", "Umbarkar", 
+             email = "maheshubr30@gmail.com", 
+             role = c("aut", "cre", "cph"))
+    )
+Description: 
+    Tools to estimate, compare, and visualize healthcare resource utilization (HCRU) 
+    by care setting and cohort. Provides support for pre/post-index analysis, 
+    readmission logic, cost and visit summaries, and publication-ready plots 
+    for Real-World Evidence (RWE) studies using EHR or claims data.
+Depends: 
+    R (>= 4.2.0)
 Imports:
     checkmate,
     dplyr,
@@ -12,11 +22,6 @@ Imports:
     gtsummary,
     purrr,
     rlang
-License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-Language: en-US
-RoxygenNote: 7.3.2
 Suggests: 
     devtools,
     knitr,
@@ -25,7 +30,12 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0),
     tibble
-Config/testthat/edition: 3
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Language: en-US
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 BugReports: https://github.com/mumbarkar/hcruR/issues
+Config/testthat/edition: 3
 Config/Needs/website: pkgdown

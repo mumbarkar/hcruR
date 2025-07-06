@@ -49,3 +49,45 @@ grouped by cohort and time window.
 \details{
 Plot HCRU Event Summary
 }
+\examples{
+# Load the hcruR package and sample data
+library(hcruR)
+data(hcru_sample_data)
+
+# Estimate HCRU summary (dplyr output only)
+hcru_summary <- estimate_hcru(
+  data = hcru_sample_data,
+  cohort_col = "cohort",
+  patient_id_col = "patient_id",
+  admit_col = "admission_date",
+  discharge_col = "discharge_date",
+  index_col = "index_date",
+  visit_col = "visit_date",
+  encounter_id_col = "encounter_id",
+  setting_col = "care_setting",
+  cost_col = "cost_usd",
+  readmission_col = "readmission",
+  time_window_col = "period",
+  los_col = "length_of_stay",
+  gt_output = FALSE
+)
+
+# Summarize average visits by cohort and care setting
+avg_visits_df <- hcru_summary$`Summary by settings using dplyr` |>
+  dplyr::group_by(time_window, cohort, care_setting) |>
+  dplyr::summarise(AVG_VISIT = mean(Visits, na.rm = TRUE), .groups = "drop")
+
+# Generate plot
+plot_hcru(
+  summary_df = avg_visits_df,
+  x_var = "time_window",
+  y_var = "AVG_VISIT",
+  cohort_col = "cohort",
+  facet_var = "care_setting",
+  facet_var_n = 3,
+  title = "Average Visits by Domain and Cohort",
+  x_label = "Timeline",
+  y_label = "Average Visits",
+  fill_label = "Cohort"
+)
+}
