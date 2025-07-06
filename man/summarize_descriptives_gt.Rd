@@ -6,10 +6,10 @@
 \usage{
 summarize_descriptives_gt(
   data,
-  patient_id_col,
+  patient_id_col = "patient_id",
   var_list = NULL,
-  group_var_main = NULL,
-  group_var_by = NULL,
+  group_var_main = "cohort",
+  group_var_by = "care_setting",
   test = NULL,
   timeline = "Pre"
 )
