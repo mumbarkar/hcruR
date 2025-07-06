@@ -39,3 +39,4 @@ VignetteBuilder: knitr
 BugReports: https://github.com/mumbarkar/hcruR/issues
 Config/testthat/edition: 3
 Config/Needs/website: pkgdown
+URL: https://github.com/mumbarkar/hcruR
