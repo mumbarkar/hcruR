@@ -2,8 +2,7 @@ Package: hcruR
 Title: Estimate, Compare, and Visualize Healthcare Resource Utilization for Real-World Evidence
 Version: 1.0.0
 Authors@R: 
-    c(person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre")),
-    person("Maheshkumar", "Umbarkar", role = "cph"))
+    c(person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre", "cph")))
 Description: Tools to estimate, compare, and visualize healthcare resource utilization (HCRU)
     using data derived from electronic health records (EHR) or real-world evidence (RWE) sources.
     The package supports pre-index and post-index analysis, patient cohort comparison, 
