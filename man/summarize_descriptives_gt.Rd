@@ -40,3 +40,39 @@ A gtsummary table object
 \description{
 Generate Detailed Descriptive Statistics with Custom P-Value Tests
 }
+\examples{
+if (requireNamespace("gtsummary", quietly = TRUE) &&
+    requireNamespace("dplyr", quietly = TRUE) &&
+    requireNamespace("purrr", quietly = TRUE) &&
+    requireNamespace("checkmate", quietly = TRUE) &&
+    requireNamespace("glue", quietly = TRUE)) {
+  hcru_sample_data <- data.frame(
+    patient_id = rep(1:10, each = 2),
+    cohort = rep(c("A", "B"), 10),
+    care_setting = rep(c("IP", "OP"), 10),
+    admission_date = Sys.Date() - sample(1:100, 20, TRUE),
+    discharge_date = Sys.Date() - sample(1:90, 20, TRUE),
+    index_date = Sys.Date() - 50,
+    visit_date = Sys.Date() - sample(1:100, 20, TRUE),
+    encounter_id = 1:20,
+    cost_usd = runif(20, 100, 1000)
+  )
+  df <- preproc_hcru_fun(data = hcru_sample_data)
+  summary_df <- summarize_descriptives(data = df)
+  # Only keep required columns for demonstration
+  summary_df$LOS <- ifelse(summary_df$care_setting == "IP",
+sample(1:10, nrow(summary_df), TRUE), NA)
+  summary_df$Readmission <- ifelse(summary_df$care_setting == "IP",
+sample(0:1, nrow(summary_df), TRUE), NA)
+  summary_df$time_window <- "Pre"
+  # Run the function (should execute within 5 seconds)
+  summarize_descriptives_gt(
+    data = summary_df,
+    patient_id_col = "patient_id",
+    var_list = c("Visits", "Cost", "LOS", "Readmission"),
+    group_var_main = "cohort",
+    group_var_by = "care_setting",
+    timeline = "Pre"
+  )
+}
+}
