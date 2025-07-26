@@ -21,6 +21,7 @@ Imports:
     purrr,
     rlang
 Suggests:
+    covr,
     devtools,
     knitr,
     pkgdown,

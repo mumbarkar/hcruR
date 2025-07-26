@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/mumbarkar/hcruR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mumbarkar/hcruR/actions/workflows/R-CMD-check.yaml) [![Codecov test coverage](https://codecov.io/gh/mumbarkar/hcruR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mumbarkar/hcruR?branch=main) [![GitHub version](https://img.shields.io/github/v/release/mumbarkar/hcruR)](https://github.com/mumbarkar/hcruR/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/mumbarkar/hcruR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mumbarkar/hcruR/actions/workflows/R-CMD-check.yaml) [![Codecov test coverage](https://codecov.io/gh/mumbarkar/hcruR/graph/badge.svg)](https://codecov.io/gh/mumbarkar/hcruR) [![GitHub version](https://img.shields.io/github/v/release/mumbarkar/hcruR)](https://github.com/mumbarkar/hcruR/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
 <!-- badges: end -->
 
