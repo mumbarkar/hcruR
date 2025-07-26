@@ -220,20 +220,20 @@ summarize_descriptives_gt <- function(
 
   # Filter the data as per the timeline
   data <- data |>
-  dplyr::filter(.data[["time_window"]] == timeline)
+    dplyr::filter(.data[["time_window"]] == timeline)
 
   # Unique settings (IP, OP, ED...)
   settings <- unique(data[[group_var_by]])
 
   # Iterate by setting
   setting_tbls <- purrr::map(settings, function(setting) {
-  df_setting <- dplyr::filter(data, .data[[group_var_by]] == setting)
+    df_setting <- dplyr::filter(data, .data[[group_var_by]] == setting)
 
-  # Drop IP-only vars if not IP
-  vars_this <- var_list
-  if (setting != "IP") {
-    vars_this <- setdiff(vars_this, c("LOS", "Readmission"))
-  }
+    # Drop IP-only vars if not IP
+    vars_this <- var_list
+    if (setting != "IP") {
+      vars_this <- setdiff(vars_this, c("LOS", "Readmission"))
+    }
 
   # Cohort group (control, treatment, etc.)
   cohort_sym <- rlang::sym(group_var_main)
@@ -243,8 +243,8 @@ summarize_descriptives_gt <- function(
     dplyr::distinct(.data[[patient_id_col]], .data[[group_var_main]]) |>
     dplyr::count(.data[[group_var_main]], name = "n") |>
     dplyr::mutate(
-    colname = paste0("stat_", dplyr::row_number()),
-    header = glue::glue("{.data[[group_var_main]]}, N = {n}")
+      colname = paste0("stat_", dplyr::row_number()),
+      header = glue::glue("{.data[[group_var_main]]}, N = {n}")
     )
   header_map <- stats::setNames(n_df$header, n_df$colname)
 
@@ -354,38 +354,38 @@ summarize_descriptives <- function(data,
   checkmate::assert_character(time_window_col, min.chars = 1)
   checkmate::assert_character(cost_col, min.chars = 1)
   checkmate::assert_character(los_col, min.chars = 1)
-  checkmate::assert_character(readmission_col, min.chars = 1)
-  checkmate::assert_character(time_window_col, min.chars = 1)
 
   # Generate summary
   summary_df <- data |>
-  dplyr::group_by(
-    .data[[patient_id_col]], .data[[cohort_col]], .data[[setting_col]],
-    .data[[time_window_col]]
-  ) |>
-  dplyr::reframe(
-    Days = as.numeric(sum(.data[["visit_days"]], na.rm = TRUE)),
-    Month = as.numeric(.data[["Days"]]) / 30.417,
-    Year = as.numeric(.data[["Days"]]) / 365.5,
-    Visits = dplyr::n_distinct(.data[[encounter_id_col]]) |> as.numeric(),
-    Cost = sum(.data[[cost_col]], na.rm = TRUE),
-    LOS = dplyr::if_else(.data[[setting_col]] == "IP",
-    sum(.data[[los_col]], na.rm = TRUE),
-    NA_real_
-    ),
-    Readmission = dplyr::if_else(.data[[setting_col]] == "IP",
-    sum(.data[[readmission_col]],
-      na.rm = TRUE
-    ),
-    NA_real_
-    ),
-    Visit_PPPM = .data[["Visits"]] / .data[["Month"]],
-    Visit_PPPY = .data[["Visits"]] / .data[["Year"]],
-    Cost_PPPM = .data[["Cost"]] / .data[["Month"]],
-    Cost_PPPY = .data[["Cost"]] / .data[["Year"]]
-  ) |>
-  dplyr::ungroup() |>
-  dplyr::distinct()
+    dplyr::group_by(
+      .data[[patient_id_col]],
+      .data[[cohort_col]],
+      .data[[setting_col]],
+      .data[[time_window_col]]
+    ) |>
+    dplyr::reframe(
+      Days = as.numeric(sum(.data[["visit_days"]], na.rm = TRUE)),
+      Month = as.numeric(.data[["Days"]]) / 30.417,
+      Year = as.numeric(.data[["Days"]]) / 365.5,
+      Visits = dplyr::n_distinct(.data[[encounter_id_col]]) |> as.numeric(),
+      Cost = sum(.data[[cost_col]], na.rm = TRUE),
+      LOS = dplyr::if_else(
+        .data[[setting_col]] == "IP",
+        sum(.data[[los_col]], na.rm = TRUE),
+        NA_real_
+      ),
+      Readmission = dplyr::if_else(
+        .data[[setting_col]] == "IP",
+        sum(.data[[readmission_col]], na.rm = TRUE),
+        NA_real_
+      ),
+      Visit_PPPM = .data[["Visits"]] / .data[["Month"]],
+      Visit_PPPY = .data[["Visits"]] / .data[["Year"]],
+      Cost_PPPM = .data[["Cost"]] / .data[["Month"]],
+      Cost_PPPY = .data[["Cost"]] / .data[["Year"]]
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::distinct()
 
   return(summary_df)
 }

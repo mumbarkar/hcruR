@@ -7,14 +7,13 @@
 #' @param summary_df Output from estimate_hcru()
 #' @param x_var A character specifying column name to be plotted on x-axis
 #' @param y_var A character specifying column name to be plotted on y-axis
-#' @param facet_var  A character specifying column name to generate the plot
-#' output in columns
-#' @param facet_var_n  A numeric specifying number of columns for facet output
-#' @param title A character
-#' @param x_label A character
-#' @param y_label A character
-#' @param fill_label A character
-#' @param cohort_col A character
+#' @param facet_var A character specifying column name to generate faceted plots
+#' @param facet_var_n A numeric specifying number of columns for facet output
+#' @param title A character specifying the plot title
+#' @param x_label A character specifying x-axis label
+#' @param y_label A character specifying y-axis label
+#' @param fill_label A character specifying fill legend label
+#' @param cohort_col A character specifying cohort column name
 #'
 #' @import ggplot2
 #' @importFrom rlang .data
@@ -53,7 +52,8 @@ plot_hcru <- function(
     title = "Average total cost by domain and cohort",
     x_label = "Healthcare Setting (Domain)",
     y_label = "Average total cost",
-    fill_label = "Cohort") {
+    fill_label = "Cohort"
+) {
   # Primary input checks
   checkmate::assert_data_frame(summary_df, min.rows = 1)
   checkmate::assert_character(x_var, min.chars = 1)
@@ -84,7 +84,9 @@ plot_hcru <- function(
       group = .data[[cohort_col]]
     )
   ) +
-    ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.9)) +
+    ggplot2::geom_col(
+      position = ggplot2::position_dodge(width = 0.9)
+    ) +
     ggplot2::geom_text(
       ggplot2::aes(
         label = round(.data[[y_var]], 1),

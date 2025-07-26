@@ -24,20 +24,19 @@ plot_hcru(
 
 \item{y_var}{A character specifying column name to be plotted on y-axis}
 
-\item{cohort_col}{A character}
+\item{cohort_col}{A character specifying cohort column name}
 
-\item{facet_var}{A character specifying column name to generate the plot
-output in columns}
+\item{facet_var}{A character specifying column name to generate faceted plots}
 
 \item{facet_var_n}{A numeric specifying number of columns for facet output}
 
-\item{title}{A character}
+\item{title}{A character specifying the plot title}
 
-\item{x_label}{A character}
+\item{x_label}{A character specifying x-axis label}
 
-\item{y_label}{A character}
+\item{y_label}{A character specifying y-axis label}
 
-\item{fill_label}{A character}
+\item{fill_label}{A character specifying fill legend label}
 }
 \value{
 ggplot object
