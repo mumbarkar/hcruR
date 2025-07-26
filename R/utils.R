@@ -167,6 +167,7 @@ preproc_hcru_fun <- function(data,
 #' @export
 #'
 #' @examples
+#'  \donttest{
 #' if (requireNamespace("gtsummary", quietly = TRUE) &&
 #'     requireNamespace("dplyr", quietly = TRUE) &&
 #'     requireNamespace("purrr", quietly = TRUE) &&
@@ -200,6 +201,7 @@ preproc_hcru_fun <- function(data,
 #'     group_var_by = "care_setting",
 #'     timeline = "Pre"
 #'   )
+#' }
 #' }
 summarize_descriptives_gt <- function(
   data,
