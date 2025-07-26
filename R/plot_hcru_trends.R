@@ -75,6 +75,7 @@ plot_hcru <- function(
     summary_df[[x_var]] <- as.factor(summary_df[[x_var]])
   }
 
+  # Add plot
   p <- ggplot2::ggplot(
     summary_df,
     ggplot2::aes(
