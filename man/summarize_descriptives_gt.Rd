@@ -41,6 +41,7 @@ A gtsummary table object
 Generate Detailed Descriptive Statistics with Custom P-Value Tests
 }
 \examples{
+ \donttest{
 if (requireNamespace("gtsummary", quietly = TRUE) &&
     requireNamespace("dplyr", quietly = TRUE) &&
     requireNamespace("purrr", quietly = TRUE) &&
@@ -74,5 +75,6 @@ sample(0:1, nrow(summary_df), TRUE), NA)
     group_var_by = "care_setting",
     timeline = "Pre"
   )
+}
 }
 }
