@@ -24,20 +24,19 @@ plot_hcru(
 
 \item{y_var}{A character specifying column name to be plotted on y-axis}
 
-\item{cohort_col}{A character}
+\item{cohort_col}{A character specifying cohort column name}
 
-\item{facet_var}{A character specifying column name to generate the plot
-output in columns}
+\item{facet_var}{A character specifying column name to generate faceted plots}
 
 \item{facet_var_n}{A numeric specifying number of columns for facet output}
 
-\item{title}{A character}
+\item{title}{A character specifying the plot title}
 
-\item{x_label}{A character}
+\item{x_label}{A character specifying x-axis label}
 
-\item{y_label}{A character}
+\item{y_label}{A character specifying y-axis label}
 
-\item{fill_label}{A character}
+\item{fill_label}{A character specifying fill legend label}
 }
 \value{
 ggplot object
@@ -50,46 +49,22 @@ grouped by cohort and time window.
 Plot HCRU Event Summary
 }
 \examples{
-\dontrun{
-# Load the hcruR package and sample data
-library(hcruR)
-data(hcru_sample_data)
-
-# Estimate HCRU summary (dplyr output only)
-hcru_summary <- estimate_hcru(
-  data = hcru_sample_data,
-  cohort_col = "cohort",
-  patient_id_col = "patient_id",
-  admit_col = "admission_date",
-  discharge_col = "discharge_date",
-  index_col = "index_date",
-  visit_col = "visit_date",
-  encounter_id_col = "encounter_id",
-  setting_col = "care_setting",
-  cost_col = "cost_usd",
-  readmission_col = "readmission",
-  time_window_col = "period",
-  los_col = "length_of_stay",
-  gt_output = FALSE
+df <- data.frame(
+  time_window = rep(c("Pre", "Post"), each = 2),
+  cohort = rep(c("A", "B"), 2),
+  care_setting = rep("Setting1", 4),
+  Cost = c(100, 120, 110, 130)
 )
-
-# Summarize average visits by cohort and care setting
-avg_visits_df <- hcru_summary$`Summary by settings using dplyr` |>
-  dplyr::group_by(time_window, cohort, care_setting) |>
-  dplyr::summarise(AVG_VISIT = mean(Visits, na.rm = TRUE), .groups = "drop")
-
-# Generate plot
 plot_hcru(
-  summary_df = avg_visits_df,
+  summary_df = df,
   x_var = "time_window",
-  y_var = "AVG_VISIT",
+  y_var = "Cost",
   cohort_col = "cohort",
   facet_var = "care_setting",
-  facet_var_n = 3,
-  title = "Average Visits by Domain and Cohort",
-  x_label = "Timeline",
-  y_label = "Average Visits",
+  facet_var_n = 1,
+  title = "Example Plot",
+  x_label = "Time Window",
+  y_label = "Cost",
   fill_label = "Cohort"
 )
-}
 }

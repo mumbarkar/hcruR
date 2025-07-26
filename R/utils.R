@@ -166,19 +166,49 @@ preproc_hcru_fun <- function(data,
 #'
 #' @export
 #'
-#' @example
-#' \dontrun{
-#' df <- preproc_hcru_fun(data = hcru_sample_data)
-#' summarize_descriptives_gt(data = df)
+#' @examples
+#' if (requireNamespace("gtsummary", quietly = TRUE) &&
+#'     requireNamespace("dplyr", quietly = TRUE) &&
+#'     requireNamespace("purrr", quietly = TRUE) &&
+#'     requireNamespace("checkmate", quietly = TRUE) &&
+#'     requireNamespace("glue", quietly = TRUE)) {
+#'   hcru_sample_data <- data.frame(
+#'     patient_id = rep(1:10, each = 2),
+#'     cohort = rep(c("A", "B"), 10),
+#'     care_setting = rep(c("IP", "OP"), 10),
+#'     admission_date = Sys.Date() - sample(1:100, 20, TRUE),
+#'     discharge_date = Sys.Date() - sample(1:90, 20, TRUE),
+#'     index_date = Sys.Date() - 50,
+#'     visit_date = Sys.Date() - sample(1:100, 20, TRUE),
+#'     encounter_id = 1:20,
+#'     cost_usd = runif(20, 100, 1000)
+#'   )
+#'   df <- preproc_hcru_fun(data = hcru_sample_data)
+#'   summary_df <- summarize_descriptives(data = df)
+#'   # Only keep required columns for demonstration
+#'   summary_df$LOS <- ifelse(summary_df$care_setting == "IP",
+#' sample(1:10, nrow(summary_df), TRUE), NA)
+#'   summary_df$Readmission <- ifelse(summary_df$care_setting == "IP",
+#' sample(0:1, nrow(summary_df), TRUE), NA)
+#'   summary_df$time_window <- "Pre"
+#'   # Run the function (should execute within 5 seconds)
+#'   summarize_descriptives_gt(
+#'     data = summary_df,
+#'     patient_id_col = "patient_id",
+#'     var_list = c("Visits", "Cost", "LOS", "Readmission"),
+#'     group_var_main = "cohort",
+#'     group_var_by = "care_setting",
+#'     timeline = "Pre"
+#'   )
 #' }
 summarize_descriptives_gt <- function(
-    data,
-    patient_id_col = "patient_id",
-    var_list = NULL,
-    group_var_main = "cohort", # e.g., "cohort"
-    group_var_by = "care_setting", # e.g., "setting"
-    test = NULL,
-    timeline = "Pre") {
+  data,
+  patient_id_col = "patient_id",
+  var_list = NULL,
+  group_var_main = "cohort", # e.g., "cohort"
+  group_var_by = "care_setting", # e.g., "setting"
+  test = NULL,
+  timeline = "Pre") {
   # Basic checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(var_list, null.ok = TRUE)
@@ -205,56 +235,56 @@ summarize_descriptives_gt <- function(
       vars_this <- setdiff(vars_this, c("LOS", "Readmission"))
     }
 
-    # Cohort group (control, treatment, etc.)
-    cohort_sym <- rlang::sym(group_var_main)
+  # Cohort group (control, treatment, etc.)
+  cohort_sym <- rlang::sym(group_var_main)
 
-    # Get N per group
-    n_df <- df_setting |>
-      dplyr::distinct(.data[[patient_id_col]], .data[[group_var_main]]) |>
-      dplyr::count(.data[[group_var_main]], name = "n") |>
-      dplyr::mutate(
-        colname = paste0("stat_", dplyr::row_number()),
-        header = glue::glue("{.data[[group_var_main]]}, N = {n}")
-      )
-    header_map <- stats::setNames(n_df$header, n_df$colname)
-
-    # Build summary
-    tbl <- gtsummary::tbl_summary(
-      data = df_setting,
-      by = !!cohort_sym,
-      include = gtsummary::all_of(vars_this),
-      missing = "no",
-      type = list(all_continuous() ~ "continuous2"),
-      statistic = list(
-        all_continuous() ~ c(
-          "Total" = "{sum}",
-          "Mean (SD)" = "{mean} ({sd})",
-          "Median (IQR)" = "{median} ({p25}, {p75})",
-          "Q1" = "{p25}",
-          "Q3" = "{p75}",
-          "Range" = "{min} - {max}"
-        )
-      )
+  # Get N per group
+  n_df <- df_setting |>
+    dplyr::distinct(.data[[patient_id_col]], .data[[group_var_main]]) |>
+    dplyr::count(.data[[group_var_main]], name = "n") |>
+    dplyr::mutate(
+      colname = paste0("stat_", dplyr::row_number()),
+      header = glue::glue("{.data[[group_var_main]]}, N = {n}")
     )
+  header_map <- stats::setNames(n_df$header, n_df$colname)
 
-    if (length(unique(df_setting[[group_var_main]])) > 1) {
-      tbl <- if (!is.null(test)) {
-        tbl |> gtsummary::add_p(test = test)
-      } else {
-        tbl |> gtsummary::add_p()
-      }
+  # Build summary
+  tbl <- gtsummary::tbl_summary(
+    data = df_setting,
+    by = !!cohort_sym,
+    include = gtsummary::all_of(vars_this),
+    missing = "no",
+    type = list(all_continuous() ~ "continuous2"),
+    statistic = list(
+    all_continuous() ~ c(
+      "Total" = "{sum}",
+      "Mean (SD)" = "{mean} ({sd})",
+      "Median (IQR)" = "{median} ({p25}, {p75})",
+      "Q1" = "{p25}",
+      "Q3" = "{p75}",
+      "Range" = "{min} - {max}"
+    )
+    )
+  )
+
+  if (length(unique(df_setting[[group_var_main]])) > 1) {
+    tbl <- if (!is.null(test)) {
+    tbl |> gtsummary::add_p(test = test)
+    } else {
+    tbl |> gtsummary::add_p()
     }
+  }
 
-    tbl <- tbl |>
-      gtsummary::modify_header(update = header_map) |>
-      gtsummary::modify_caption(glue::glue("**Summary Table**")) |>
-      gtsummary::bold_labels()
+  tbl <- tbl |>
+    gtsummary::modify_header(update = header_map) |>
+    gtsummary::modify_caption(glue::glue("**Summary Table**")) |>
+    gtsummary::bold_labels()
   })
 
   # Merge all setting-wise cohort tables side-by-side
   gtsummary::tbl_merge(
-    tbls = setting_tbls,
-    tab_spanner = settings
+  tbls = setting_tbls,
+  tab_spanner = settings
   )
 }
 
@@ -281,20 +311,39 @@ summarize_descriptives_gt <- function(
 #'
 #' @export
 #'
-#' @example
-#' \dontrun{
-#' df <- preproc_hcru_fun(data = hcru_sample_data)
-#' summarize_descriptives(data = df)
+#' @examples
+#' if (requireNamespace("dplyr", quietly = TRUE) &&
+#'     requireNamespace("checkmate", quietly = TRUE)) {
+#'   hcru_sample_data <- data.frame(
+#'     patient_id = rep(1:10, each = 2),
+#'     cohort = rep(c("A", "B"), 10),
+#'     care_setting = rep(c("IP", "OP"), 10),
+#'     admission_date = Sys.Date() - sample(1:100, 20, TRUE),
+#'     discharge_date = Sys.Date() - sample(1:90, 20, TRUE),
+#'     index_date = Sys.Date() - 50,
+#'     visit_date = Sys.Date() - sample(1:100, 20, TRUE),
+#'     encounter_id = 1:20,
+#'     cost_usd = runif(20, 100, 1000)
+#'   )
+#'   df <- preproc_hcru_fun(data = hcru_sample_data)
+#'   summary_df <- summarize_descriptives(data = df)
+#'   # Only keep required columns for demonstration
+#'   summary_df$LOS <- ifelse(summary_df$care_setting == "IP",
+#'     sample(1:10, nrow(summary_df), TRUE), NA)
+#'   summary_df$Readmission <- ifelse(summary_df$care_setting == "IP",
+#'     sample(0:1, nrow(summary_df), TRUE), NA)
+#'   summary_df$time_window <- "Pre"
+#'   summary_df
 #' }
 summarize_descriptives <- function(data,
-                                   patient_id_col = "patient_id",
-                                   setting_col = "care_setting",
-                                   cohort_col = "cohort",
-                                   encounter_id_col = "encounter_id",
-                                   cost_col = "cost_usd",
-                                   los_col = "length_of_stay",
-                                   readmission_col = "readmission",
-                                   time_window_col = "time_window") {
+                   patient_id_col = "patient_id",
+                   setting_col = "care_setting",
+                   cohort_col = "cohort",
+                   encounter_id_col = "encounter_id",
+                   cost_col = "cost_usd",
+                   los_col = "length_of_stay",
+                   readmission_col = "readmission",
+                   time_window_col = "time_window") {
   # Primary input checks
   checkmate::assert_data_frame(data, min.rows = 1)
   checkmate::assert_character(patient_id_col, min.chars = 1)
@@ -305,13 +354,13 @@ summarize_descriptives <- function(data,
   checkmate::assert_character(time_window_col, min.chars = 1)
   checkmate::assert_character(cost_col, min.chars = 1)
   checkmate::assert_character(los_col, min.chars = 1)
-  checkmate::assert_character(readmission_col, min.chars = 1)
-  checkmate::assert_character(time_window_col, min.chars = 1)
 
   # Generate summary
   summary_df <- data |>
     dplyr::group_by(
-      .data[[patient_id_col]], .data[[cohort_col]], .data[[setting_col]],
+      .data[[patient_id_col]],
+      .data[[cohort_col]],
+      .data[[setting_col]],
       .data[[time_window_col]]
     ) |>
     dplyr::reframe(
@@ -320,14 +369,14 @@ summarize_descriptives <- function(data,
       Year = as.numeric(.data[["Days"]]) / 365.5,
       Visits = dplyr::n_distinct(.data[[encounter_id_col]]) |> as.numeric(),
       Cost = sum(.data[[cost_col]], na.rm = TRUE),
-      LOS = dplyr::if_else(.data[[setting_col]] == "IP",
+      LOS = dplyr::if_else(
+        .data[[setting_col]] == "IP",
         sum(.data[[los_col]], na.rm = TRUE),
         NA_real_
       ),
-      Readmission = dplyr::if_else(.data[[setting_col]] == "IP",
-        sum(.data[[readmission_col]],
-          na.rm = TRUE
-        ),
+      Readmission = dplyr::if_else(
+        .data[[setting_col]] == "IP",
+        sum(.data[[readmission_col]], na.rm = TRUE),
         NA_real_
       ),
       Visit_PPPM = .data[["Visits"]] / .data[["Month"]],

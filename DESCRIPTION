@@ -2,12 +2,14 @@ Package: hcruR
 Title: Estimate, Compare, and Visualize Healthcare Resource Utilization for Real-World Evidence
 Version: 1.0.0
 Authors@R: 
-    c(person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre")),
-    person("Maheshkumar", "Umbarkar", role = "cph"))
+    c(person("Maheshkumar", "Umbarkar", email = "maheshubr30@gmail.com", role = c("aut", "cre", "cph")),
+      person("Safiuddin Shoeb", "Syed", email = "syed.safiuddin@79@gmail.com", role = "aut"))
 Description: Tools to estimate, compare, and visualize healthcare resource utilization (HCRU)
     using data derived from electronic health records (EHR) or real-world evidence (RWE) sources.
     The package supports pre-index and post-index analysis, patient cohort comparison, 
     and customizable summaries and visualizations for clinical and health economics research.
+    Methods implemented are based on Scott et al. (2022) <doi:10.1080/13696998.2022.2037917>
+    and Xia et al. (2024) <doi:10.14309/ajg.0000000000002901>.
 Depends: 
     R (>= 4.2.0)
 Imports:
@@ -18,7 +20,7 @@ Imports:
     gtsummary,
     purrr,
     rlang
-Suggests: 
+Suggests:
     devtools,
     knitr,
     pkgdown,
@@ -31,7 +33,7 @@ Encoding: UTF-8
 LazyData: true
 Language: en-US
 RoxygenNote: 7.3.2
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
 BugReports: https://github.com/mumbarkar/hcruR/issues
 Config/testthat/edition: 3
 Config/Needs/website: pkgdown

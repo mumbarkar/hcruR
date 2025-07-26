@@ -59,9 +59,11 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' estimate_hcru(data = hcru_sample_data)
+#' \donttest{
+#' df <- hcru_sample_data[sample(nrow(hcru_sample_data), 10), ]
+#' estimate_hcru(data = df)
 #' }
+
 estimate_hcru <- function(data,
                           cohort_col = "cohort",
                           patient_id_col = "patient_id",
