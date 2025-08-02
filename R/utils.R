@@ -34,7 +34,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' preproc_hcru_fun(data = hcru_sample_data)
 #' }
 preproc_hcru_fun <- function(data,
