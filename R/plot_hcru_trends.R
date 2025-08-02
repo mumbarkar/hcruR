@@ -41,7 +41,6 @@
 #'   y_label = "Cost",
 #'   fill_label = "Cohort"
 #' )
-
 plot_hcru <- function(
     summary_df,
     x_var = "time_window",
@@ -52,8 +51,7 @@ plot_hcru <- function(
     title = "Average total cost by domain and cohort",
     x_label = "Healthcare Setting (Domain)",
     y_label = "Average total cost",
-    fill_label = "Cohort"
-) {
+    fill_label = "Cohort") {
   # Primary input checks
   checkmate::assert_data_frame(summary_df, min.rows = 1)
   checkmate::assert_character(x_var, min.chars = 1)
