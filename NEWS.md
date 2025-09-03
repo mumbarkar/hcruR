@@ -1,3 +1,5 @@
+# hcruR (development version)
+
 # hcruR 1.0.0
 
 * Initial CRAN submission.
