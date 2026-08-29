@@ -250,6 +250,10 @@ summarize_descriptives_gt <- function(
     )
   header_map <- stats::setNames(n_df$header, n_df$colname)
 
+  # Convert the named header vector to a list and splice
+  # it into modify_header() using dynamic dots.
+  header_updates <- as.list(header_map)
+
   # Build summary
   tbl <- gtsummary::tbl_summary(
     data = df_setting,
@@ -278,7 +282,7 @@ summarize_descriptives_gt <- function(
   }
 
   tbl <- tbl |>
-    gtsummary::modify_header(update = header_map) |>
+    gtsummary::modify_header(!!!header_updates) |>
     gtsummary::modify_caption(glue::glue("**Summary Table**")) |>
     gtsummary::bold_labels()
   })
@@ -286,7 +290,8 @@ summarize_descriptives_gt <- function(
   # Merge all setting-wise cohort tables side-by-side
   gtsummary::tbl_merge(
   tbls = setting_tbls,
-  tab_spanner = settings
+  tab_spanner = settings,
+  quiet = TRUE
   )
 }
 
